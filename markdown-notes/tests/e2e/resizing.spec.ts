@@ -9,7 +9,9 @@ async function drag(page: Page, divider: Locator, delta: number) {
     y = box.y + Math.min(100, box.height / 2);
   await page.mouse.move(x, y);
   await page.mouse.down();
-  await page.mouse.move(Math.max(1, x + delta), y, { steps: 8 });
+  // One native move still exercises pointer capture and the final drag position. Avoid eight
+  // protocol round trips that allow the physical desktop pointer to interrupt a hidden window.
+  await page.mouse.move(Math.max(1, x + delta), y);
   await page.mouse.up();
   await expect(page.locator('.app-shell')).not.toHaveClass(/resizing/);
 }

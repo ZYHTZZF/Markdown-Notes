@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-20T09:59:56.003Z",
+  "date": "2026-10-20T12:10:25.519Z",
   "pass": true,
   "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
   "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
   "runtime": {
     "packaged": true,
-    "version": "1.3.0",
+    "version": "1.4.0",
     "electron": "44.9.1",
     "node": "24.22.0"
   },
@@ -16,6 +16,7 @@
     "自动持久化",
     "成品离线数学公式预览与真实PDF导出",
     "成品主色与纯色背景设置、带背景导出选项",
+    "成品即时编辑与Markdown标题转换",
     "实际打包标志与版本"
   ]
 }

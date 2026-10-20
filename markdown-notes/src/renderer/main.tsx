@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { safeMarkdown } from './markdown';
 import {
@@ -44,6 +44,7 @@ import {
   Command,
   PanelLeft,
   FileDown,
+  PenLine,
 } from 'lucide-react';
 import { codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
@@ -52,6 +53,10 @@ import { version as APP_VERSION } from '../../package.json';
 import { usePaneLayout, PaneDivider } from './pane-layout';
 import { AppearanceSettings, applyAppearance } from './appearance';
 import { DEFAULT_APPEARANCE, type AppearanceView } from '../shared/appearance';
+import type { LiveEditorHandle } from './live-editor';
+const LiveEditor = lazy(() =>
+  import('./live-editor').then((module) => ({ default: module.LiveEditor })),
+);
 
 const api = window.notesApi;
 const date = (s: string) =>
@@ -185,7 +190,7 @@ function App() {
   const [note, setNote] = useState<NoteView | null>(null),
     [draft, setDraftState] = useState<Draft | null>(null),
     [saveState, setSaveState] = useState('saved'),
-    [mode, setMode] = useState<'edit' | 'split' | 'read'>('split'),
+    [mode, setMode] = useState<'edit' | 'split' | 'read' | 'live'>('split'),
     [font, setFont] = useState(16),
     [modal, setModal] = useState<Modal | null>(null),
     [input, setInput] = useState(''),
@@ -205,6 +210,7 @@ function App() {
     statusRef = useRef<any>(null),
     firstEdit = useRef(0),
     toastTimer = useRef<any>(null);
+  const liveEditor = useRef<LiveEditorHandle>(null);
   const referencesButton = useRef<HTMLButtonElement>(null),
     referencesCloseButton = useRef<HTMLButtonElement>(null);
   const closeReferences = useCallback(() => {
@@ -327,7 +333,10 @@ function App() {
         setPage(1);
         installNote(result.note);
         setRefresh((n) => n + 1);
-        setTimeout(() => editor.current?.focus(), 40);
+        setTimeout(() => {
+          editor.current?.focus();
+          liveEditor.current?.focus();
+        }, 40);
       }),
     [act, installNote],
   );
@@ -345,7 +354,11 @@ function App() {
         statusRef.current = s;
         epochRef.current = s.epoch;
         if (s.profile) {
-          setMode(s.profile.preferences.mode ?? 'split');
+          setMode(
+            localStorage.getItem('zhiye.live-mode.v1') === 'true'
+              ? 'live'
+              : (s.profile.preferences.mode ?? 'split'),
+          );
           setFont(s.profile.preferences.font_size ?? 16);
         }
         if (!s.fault) void refreshTags();
@@ -535,13 +548,22 @@ function App() {
       installNote(null);
       setPage(1);
     });
-  const changeMode = (next: 'edit' | 'split' | 'read') => {
+  const changeMode = (next: 'edit' | 'split' | 'read' | 'live') => {
     setMode(next);
+    if (next === 'live') {
+      localStorage.setItem('zhiye.live-mode.v1', 'true');
+      return;
+    }
+    localStorage.removeItem('zhiye.live-mode.v1');
     void api
       .call('preferences', { preferences: { mode: next } })
       .catch((e) => notify(e.message, true));
   };
   const insert = (a: string, b = '') => {
+    if (mode === 'live') {
+      liveEditor.current?.insert(a, b);
+      return;
+    }
     const t = editor.current;
     if (!t) return;
     const start = t.selectionStart,
@@ -1085,6 +1107,7 @@ function App() {
                   <div className="view-tabs">
                     {[
                       ['edit', '写作', AlignLeft],
+                      ['live', '即时', PenLine],
                       ['split', '分屏', Columns2],
                       ['read', '阅读', Eye],
                     ].map(([m, label, Icon]: any) => (
@@ -1118,7 +1141,31 @@ function App() {
                   className={'editor-area ' + mode}
                   style={{ '--editor-font': font + 'px' } as React.CSSProperties}
                 >
-                  {mode !== 'read' && (
+                  {mode === 'live' && (
+                    <>
+                      <div className="live-editor-hint">
+                        即时编辑 · 输入 ## 空格变成标题 · Ctrl+单击打开引用或链接 ·
+                        点击公式／表格修改源码
+                      </div>
+                      <Suspense fallback={<p className="live-editor-hint">正在打开即时编辑器…</p>}>
+                        <LiveEditor
+                          key={note.note_id}
+                          ref={liveEditor}
+                          value={content}
+                          readOnly={!!note.deleted_at || !!busy}
+                          onChange={edit}
+                          onLink={(kind, target) => {
+                            if (kind === 'note') jump(target);
+                            else
+                              void api
+                                .call('system.openLink', { url: target })
+                                .catch((e) => notify(e.message, true));
+                          }}
+                        />
+                      </Suspense>
+                    </>
+                  )}
+                  {(mode === 'edit' || mode === 'split') && (
                     <div className="source-pane">
                       <div className="pane-label">Markdown 源文</div>
                       <textarea
@@ -1138,7 +1185,7 @@ function App() {
                       />
                     </div>
                   )}
-                  {mode !== 'edit' && (
+                  {(mode === 'read' || mode === 'split') && (
                     <div className="preview-pane">
                       <div className="pane-label">
                         预览 <span>实时呈现</span>
@@ -1752,6 +1799,10 @@ function App() {
                     </span>
                   </div>
                   <h3>常用Markdown</h3>
+                  <p>
+                    工具栏“即时”可在一个编辑区内边写边呈现；输入 ##
+                    后接空格创建二级标题，支持列表、引用、粗体、行内代码等。公式与表格点击后显示源码，移开光标后恢复渲染。Ctrl+Z撤销、Ctrl+Y重做；Ctrl+单击打开引用或链接。切换回“分屏”可查看完整Markdown原文。
+                  </p>
                   <pre>
                     {
                       '# 一级标题\n## 二级标题\n**粗体**  *斜体*\n- 列表条目\n- [ ] 待办任务\n> 引用文字\n`行内代码`\n[[另一篇笔记的标题]]'

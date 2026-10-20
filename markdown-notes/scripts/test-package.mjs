@@ -45,6 +45,18 @@ try {
     document.querySelector('[role="status"]')?.textContent?.includes('PDF已导出'),
   );
   assert.equal(readFileSync(pdf).subarray(0, 5).toString(), '%PDF-');
+  await page.getByRole('button', { name: '即时', exact: true }).click();
+  const live = page.getByRole('textbox', { name: '即时编辑器', exact: true });
+  await live.click();
+  await page.keyboard.press('Control+End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('## ');
+  await page.keyboard.insertText('成品即时编辑');
+  assert.equal(await page.getByRole('heading', { level: 2, name: '成品即时编辑' }).count(), 1);
+  await page.keyboard.press('Control+s');
+  await page.waitForFunction(() =>
+    document.querySelector('.save-status')?.textContent?.includes('已保存'),
+  );
   const runtime = await app.evaluate(({ app }) => ({
     packaged: app.isPackaged,
     version: app.getVersion(),
@@ -68,6 +80,7 @@ try {
       '自动持久化',
       '成品离线数学公式预览与真实PDF导出',
       '成品主色与纯色背景设置、带背景导出选项',
+      '成品即时编辑与Markdown标题转换',
       '实际打包标志与版本',
     ],
   };

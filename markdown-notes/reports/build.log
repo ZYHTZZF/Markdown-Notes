@@ -1,14 +1,14 @@
 
-> markdown-notes@1.3.0 build
+> markdown-notes@1.4.0 build
 > node scripts/build.mjs
 
 vite v8.3.4 building client environment for production...
 transforming...
-✓ 2058 modules transformed.
+✓ 2082 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/renderer/print.html                                         0.62 kB │ gzip:   0.35 kB
-dist/renderer/index.html                                         0.75 kB │ gzip:   0.44 kB
+dist/renderer/index.html                                         0.75 kB │ gzip:   0.43 kB
 dist/renderer/assets/KaTeX_Size3-Regular-CTq5MqoE.woff           4.42 kB
 dist/renderer/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2          4.92 kB
 dist/renderer/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2          5.20 kB
@@ -69,10 +69,12 @@ dist/renderer/assets/KaTeX_Main-Bold-waoOVXN0.ttf               51.33 kB
 dist/renderer/assets/KaTeX_Main-Regular-ypZvNtVU.ttf            53.58 kB
 dist/renderer/assets/KaTeX_AMS-Regular-DRggAlZN.ttf             63.63 kB
 dist/renderer/assets/print-D_ViP0wm.css                          1.49 kB │ gzip:   0.73 kB
+dist/renderer/assets/live-editor-DvFXN6g4.css                    2.11 kB │ gzip:   0.78 kB
 dist/renderer/assets/appearance-tUqyOkrX.css                    29.72 kB │ gzip:   8.10 kB
 dist/renderer/assets/index-DUQaibsR.css                         30.59 kB │ gzip:   6.85 kB
-dist/renderer/assets/print-XrsFFyEb.js                           1.19 kB │ gzip:   0.62 kB
-dist/renderer/assets/index-Cnk0kTM7.js                         280.57 kB │ gzip:  88.03 kB
-dist/renderer/assets/appearance-eBXPYP5z.js                    481.79 kB │ gzip: 158.82 kB
+dist/renderer/assets/print-COCFaR4t.js                           1.19 kB │ gzip:   0.62 kB
+dist/renderer/assets/index-bmTJT6gp.js                         284.02 kB │ gzip:  89.39 kB
+dist/renderer/assets/appearance-CCvpg70I.js                    481.82 kB │ gzip: 158.84 kB
+dist/renderer/assets/live-editor-DjX0mH2S.js                   503.52 kB │ gzip: 177.06 kB
 
-✓ built in 300ms
+✓ built in 314ms

@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-20T10:03:23.909Z",
-  "version": "1.3.0",
+  "date": "2026-10-20T12:10:46.501Z",
+  "version": "1.4.0",
   "baseline": [
     {
       "path": "需求分析文档/01-需求分析文档.md",
@@ -289,46 +289,54 @@
       "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa"
     },
     {
-      "path": "dist/renderer/assets/appearance-eBXPYP5z.js",
-      "sha256": "437829e81e4b9c49d5e68a0277dc1e571e215dc0dbfce874f82866f2c0e84b09"
+      "path": "dist/renderer/assets/appearance-CCvpg70I.js",
+      "sha256": "a54fedd6126d343b4b0a0d82e2f921642606979d7709319f44155cb9efd9db64"
     },
     {
       "path": "dist/renderer/assets/appearance-tUqyOkrX.css",
       "sha256": "e7ae48b9df8d0c28aeab05502bc2ec10c1e36f5abb434f71b87e332b158eb7cb"
     },
     {
-      "path": "dist/renderer/assets/index-Cnk0kTM7.js",
-      "sha256": "9e0bc8ca32330754ad756eeb0b597bcebb12edd2e487162f7307ae115fe4fec6"
-    },
-    {
       "path": "dist/renderer/assets/index-DUQaibsR.css",
       "sha256": "9d12981f1d5d0839944a7e2c32a730c74985af9ff235574e2481663932629889"
+    },
+    {
+      "path": "dist/renderer/assets/index-bmTJT6gp.js",
+      "sha256": "467bbf6304871d1447d9d4c35c7545a83082d0892e5b8737253d9dc00d3d375b"
+    },
+    {
+      "path": "dist/renderer/assets/live-editor-DjX0mH2S.js",
+      "sha256": "4889c046a340edd965dcd9c7ad447af742f826227d3c21c7d71a3c2e15b23a0e"
+    },
+    {
+      "path": "dist/renderer/assets/live-editor-DvFXN6g4.css",
+      "sha256": "2117c94ab616ee682525f6fe6a860c60c3d3b1dfc924e18de6c42b4aeb3a2a06"
+    },
+    {
+      "path": "dist/renderer/assets/print-COCFaR4t.js",
+      "sha256": "3afa6f016e67aa16e66216e55809b335acfdb9c7fa0c0499d50e8e6fcc95576f"
     },
     {
       "path": "dist/renderer/assets/print-D_ViP0wm.css",
       "sha256": "499cda9a78bbf62115ab58fc7c33c1e45bbf2c8cfc129e68953dbb20497e9cd5"
     },
     {
-      "path": "dist/renderer/assets/print-XrsFFyEb.js",
-      "sha256": "9ed233bd23573252da44222594975fe7ce18bb1567c870e1ed6890a41f29a4b6"
-    },
-    {
       "path": "dist/renderer/index.html",
-      "sha256": "ec99b055a2625558aa1d669acd1445756fc3dcf3c831931b9f99078cbfd9ebf8"
+      "sha256": "27443d2c9b6217b2e79aece004a479ac7e03945b2146567a59874b0fa56876b9"
     },
     {
       "path": "dist/renderer/print.html",
-      "sha256": "de2e440a9f8b252b04051ed16495946bbbb7d50531edda5d4b95963b9e65c091"
+      "sha256": "e09b31ef24b8f3f46111b754ebd8cedfb7af30baf90d311438d7aac4dd35a2cb"
     }
   ],
   "packaged": {
-    "date": "2026-10-20T09:59:56.003Z",
+    "date": "2026-10-20T12:10:25.519Z",
     "pass": true,
     "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
     "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
     "runtime": {
       "packaged": true,
-      "version": "1.3.0",
+      "version": "1.4.0",
       "electron": "44.9.1",
       "node": "24.22.0"
     },
@@ -339,6 +347,7 @@
       "自动持久化",
       "成品离线数学公式预览与真实PDF导出",
       "成品主色与纯色背景设置、带背景导出选项",
+      "成品即时编辑与Markdown标题转换",
       "实际打包标志与版本"
     ]
   }
