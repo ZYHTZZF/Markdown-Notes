@@ -1,10 +1,9 @@
 import { cp, mkdir, writeFile, rename, stat, rm, readFile } from 'node:fs/promises';
 import { join, resolve, dirname } from 'node:path';
-const directory = 'release/知页-win-x64';
+import { packageDirectory } from './package-directory.mjs';
+const directory = packageDirectory();
 const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 const output = resolve(directory);
-if (dirname(output) !== resolve('release') || !output.endsWith('知页-win-x64'))
-  throw new Error('打包输出目录不安全');
 await rm(output, { recursive: true, force: true });
 await mkdir(directory, { recursive: true });
 await cp('node_modules/electron/dist', directory, { recursive: true });

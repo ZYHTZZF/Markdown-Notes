@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-20T12:37:02.942Z",
-  "version": "1.5.0",
+  "date": "2026-10-20T12:51:46.333Z",
+  "version": "1.5.1",
   "baseline": [
     {
       "path": "需求分析文档/01-需求分析文档.md",
@@ -297,20 +297,20 @@
       "sha256": "e7ae48b9df8d0c28aeab05502bc2ec10c1e36f5abb434f71b87e332b158eb7cb"
     },
     {
-      "path": "dist/renderer/assets/index-C3YZFRZx.css",
-      "sha256": "bee995d1f40b6ceb4679aa1fa18c26f7c9caf977f2bcc5e52a18f30e0b55d0c2"
+      "path": "dist/renderer/assets/index-BGNdChSh.js",
+      "sha256": "3eebad78be221e6ea877c1dc89886c43b75598c9f7fba45573d5827bbae20a45"
     },
     {
-      "path": "dist/renderer/assets/index-CTtUDBSR.js",
-      "sha256": "8a388f548d415d87d6c7edc6d778f643aec4b1961438c3d28e380b6529938bf6"
-    },
-    {
-      "path": "dist/renderer/assets/live-editor-B73zqkBo.js",
-      "sha256": "3227e5f72d8169fba1298004eeb65c5ba59b7d5ec67b1aae57984b52ae27c0f7"
+      "path": "dist/renderer/assets/index-DLiZsavs.css",
+      "sha256": "ab867532200dda87ea22f1ed990c2e4d64cef4d8044c9d3a046610c8d7881ea9"
     },
     {
       "path": "dist/renderer/assets/live-editor-DvFXN6g4.css",
       "sha256": "2117c94ab616ee682525f6fe6a860c60c3d3b1dfc924e18de6c42b4aeb3a2a06"
+    },
+    {
+      "path": "dist/renderer/assets/live-editor-IO_-8ikk.js",
+      "sha256": "aef69d4116c9a011b8ab12f90b849f97b57fa6f2b4523dce1480fd40fc8ff2a7"
     },
     {
       "path": "dist/renderer/assets/print-DO-XxSuu.js",
@@ -322,7 +322,7 @@
     },
     {
       "path": "dist/renderer/index.html",
-      "sha256": "f1624f258b7b18c64de73143ca6f2d6bf63b2135207bdb814e75440f59309e6b"
+      "sha256": "d719efc22828d33826ae4d02e11b589a145759385ece2b5092c5286a327dc443"
     },
     {
       "path": "dist/renderer/print.html",
@@ -330,19 +330,19 @@
     }
   ],
   "packaged": {
-    "date": "2026-10-20T12:35:50.333Z",
+    "date": "2026-10-20T12:51:05.234Z",
     "pass": true,
-    "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
+    "executable": "I:\\软件工程\\markdown-notes\\release\\知页-v1.5.1-win-x64\\知页.exe",
     "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
     "runtime": {
       "packaged": true,
-      "version": "1.5.0",
+      "version": "1.5.1",
       "electron": "44.9.1",
       "node": "24.22.0"
     },
     "checks": [
       "成品EXE独立启动",
-      "新建与编辑",
+      "新建直接选择空白／模板并编辑",
       "安全Markdown预览",
       "自动持久化",
       "成品离线数学公式预览与真实PDF导出",

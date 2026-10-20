@@ -19,6 +19,7 @@ test('桌面端：离线编辑、自动保存、标签、引用、导出与完�
     page.on('pageerror', (e) => errors.push(e.message));
     await expect(page.getByText('给想法一个安静的地方')).toBeVisible();
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
     await expect(editor).toBeVisible();
     await editor.fill(
@@ -113,6 +114,7 @@ test('关闭重启后正文保留，恶意HTML和远程图片不执行', async (
   let page = await app.firstWindow();
   try {
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page
       .getByRole('textbox', { name: 'Markdown编辑器' })
       .fill(
@@ -142,6 +144,7 @@ test('持续输入定期持久化，并对规范等价的原文高亮', async ()
   try {
     const page = await app.firstWindow();
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
     for (let i = 0; i < 22; i++) {
       await editor.fill('持续记录 Cafe\u0301 · ' + i);

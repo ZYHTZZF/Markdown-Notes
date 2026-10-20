@@ -1,26 +1,27 @@
 
-Running 18 tests using 1 worker
+Running 19 tests using 1 worker
 
-  ok  1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (7.4s)
-  ok  2 tests\e2e\app.spec.ts:105:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.5s)
-  ok  3 tests\e2e\app.spec.ts:134:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.6s)
-  ok  4 tests\e2e\appearance.spec.ts:6:5 › 自定义颜色与图片背景：本机记忆、独立副本、带背景／无背景PDF、恢复默认 (5.3s)
-  ok  5 tests\e2e\appearance.spec.ts:121:5 › 无效图片、伪造路径与损坏设置：拒绝非法输入，保留原设置并回退默认 (1.6s)
-  ok  6 tests\e2e\live-editor.spec.ts:17:5 › 即时编辑：##空格生成二级标题、列表、粗体、撤销与源码往返 (2.0s)
-  ok  7 tests\e2e\live-editor.spec.ts:74:5 › 原文保留、公式表格、中文组合输入、模式记忆与关闭前保存 (3.1s)
-  ok  8 tests\e2e\live-editor.spec.ts:140:5 › 即时模式小窗口、原文粘贴、安全显示与回收站只读 (1.8s)
-  ok  9 tests\e2e\math-pdf.spec.ts:13:5 › 离线公式预览与真实PDF：中文、四种定界符、矩阵、长文分页、安全隔离和取消 (2.9s)
-  ok 10 tests\e2e\math-pdf.spec.ts:112:5 › 错误公式与恶意命令不执行；打印失败保留旧PDF、清理隐藏窗口并允许重试 (2.8s)
-  ok 11 tests\e2e\productivity.spec.ts:20:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.1s)
-  ok 12 tests\e2e\productivity.spec.ts:59:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (2.6s)
-  ok 13 tests\e2e\productivity.spec.ts:112:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (3.6s)
-  ok 14 tests\e2e\resizing.spec.ts:35:7 › 1480宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (26.7s)
-  ok 15 tests\e2e\resizing.spec.ts:35:7 › 1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (3.9s)
-  ok 16 tests\e2e\visual.spec.ts:101:7 › 清透界面1480×940：长内容、引用抽屉、搜索、设置与恢复布局 (6.8s)
-  ok 17 tests\e2e\visual.spec.ts:101:7 › 清透界面1080×700：长内容、引用抽屉、搜索、设置与恢复布局 (6.4s)
-  ok 18 tests\e2e\visual.spec.ts:247:5 › 窗口控制、减少动态效果、模式偏好及关闭前保存兼容 (2.5s)
+  ok  1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (7.6s)
+  ok  2 tests\e2e\app.spec.ts:106:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.6s)
+  ok  3 tests\e2e\app.spec.ts:136:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.8s)
+  ok  4 tests\e2e\appearance.spec.ts:6:5 › 自定义颜色与图片背景：本机记忆、独立副本、带背景／无背景PDF、恢复默认 (5.5s)
+  ok  5 tests\e2e\appearance.spec.ts:122:5 › 无效图片、伪造路径与损坏设置：拒绝非法输入，保留原设置并回退默认 (1.6s)
+  ok  6 tests\e2e\live-editor.spec.ts:17:5 › 即时编辑：##空格生成二级标题、列表、粗体、撤销与源码往返 (2.2s)
+  ok  7 tests\e2e\live-editor.spec.ts:75:5 › 原文保留、公式表格、中文组合输入、模式记忆与关闭前保存 (3.3s)
+  ok  8 tests\e2e\live-editor.spec.ts:142:5 › 即时模式小窗口、原文粘贴、安全显示与回收站只读 (1.9s)
+  ok  9 tests\e2e\math-pdf.spec.ts:13:5 › 离线公式预览与真实PDF：中文、四种定界符、矩阵、长文分页、安全隔离和取消 (3.2s)
+  ok 10 tests\e2e\math-pdf.spec.ts:113:5 › 错误公式与恶意命令不执行；打印失败保留旧PDF、清理隐藏窗口并允许重试 (2.8s)
+  ok 11 tests\e2e\productivity.spec.ts:21:5 › 新建入口直接选模板：取消不创建、Ctrl+N、内置与自定义、草稿保护及空白新建 (2.1s)
+  ok 12 tests\e2e\productivity.spec.ts:79:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.4s)
+  ok 13 tests\e2e\productivity.spec.ts:119:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (2.8s)
+  ok 14 tests\e2e\productivity.spec.ts:173:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (3.8s)
+  ok 15 tests\e2e\resizing.spec.ts:35:7 › 1480宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (26.7s)
+  ok 16 tests\e2e\resizing.spec.ts:35:7 › 1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (4.1s)
+  ok 17 tests\e2e\visual.spec.ts:101:7 › 清透界面1480×940：长内容、引用抽屉、搜索、设置与恢复布局 (6.8s)
+  ok 18 tests\e2e\visual.spec.ts:101:7 › 清透界面1080×700：长内容、引用抽屉、搜索、设置与恢复布局 (6.8s)
+  ok 19 tests\e2e\visual.spec.ts:248:5 › 窗口控制、减少动态效果、模式偏好及关闭前保存兼容 (2.4s)
 
-  18 passed (1.7m)
+  19 passed (1.8m)
 
-(node:7952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:27716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)

@@ -2,301 +2,301 @@ TAP version 13
 # Subtest: 任意主色生成可读的按钮与链接，包括极浅、极深和灰色
 ok 1 - 任意主色生成可读的按钮与链接，包括极浅、极深和灰色
   ---
-  duration_ms: 5.2677
+  duration_ms: 5.7219
   type: 'test'
   ...
 # Subtest: 外观输入只接受受限颜色、背景类别与强度，不接收任意路径或CSS
 ok 2 - 外观输入只接受受限颜色、背景类别与强度，不接收任意路径或CSS
   ---
-  duration_ms: 2.1134
+  duration_ms: 1.813
   type: 'test'
   ...
-# (node:61032) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:25972) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 100,000条引用边界：新建、恢复和重命名激活超限均整笔拒绝
 ok 3 - 100,000条引用边界：新建、恢复和重命名激活超限均整笔拒绝
   ---
-  duration_ms: 1920.8452
+  duration_ms: 2030.9667
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 名称：NFC、ASCII大小写、码点长度、控制字符与全角区别
 ok 4 - 名称：NFC、ASCII大小写、码点长度、控制字符与全角区别
   ---
-  duration_ms: 1.624
+  duration_ms: 2.0992
   type: 'test'
   ...
 # Subtest: 解析：排除三类代码、奇偶转义、嵌套、相邻与字面特殊字符
 ok 5 - 解析：排除三类代码、奇偶转义、嵌套、相邻与字面特殊字符
   ---
-  duration_ms: 4.4502
+  duration_ms: 4.3136
   type: 'test'
   ...
 # Subtest: 渲染：HTML不执行、远程图片不加载，双向引用与任务列表可用
 ok 6 - 渲染：HTML不执行、远程图片不加载，双向引用与任务列表可用
   ---
-  duration_ms: 3.9321
+  duration_ms: 2.517
   type: 'test'
   ...
 # Subtest: 持久化、默认标题、重复标题、revision与请求幂等
 ok 7 - 持久化、默认标题、重复标题、revision与请求幂等
   ---
-  duration_ms: 127.1451
+  duration_ms: 129.8572
   type: 'test'
   ...
 # Subtest: 原子重命名包含自引用，回收站、代码和转义原文不变
 ok 8 - 原子重命名包含自引用，回收站、代码和转义原文不变
   ---
-  duration_ms: 99.2473
+  duration_ms: 107.777
   type: 'test'
   ...
 # Subtest: 重命名执行中失败与联动超限均整体回滚
 ok 9 - 重命名执行中失败与联动超限均整体回滚
   ---
-  duration_ms: 149.8865
+  duration_ms: 141.9386
   type: 'test'
   ...
 # Subtest: 全局删除标签包括回收站关联，同名新标签不重新关联
 ok 10 - 全局删除标签包括回收站关联，同名新标签不重新关联
   ---
-  duration_ms: 111.6242
+  duration_ms: 114.3764
   type: 'test'
   ...
 # Subtest: 21个标签拒绝，不会提交部分关联
 ok 11 - 21个标签拒绝，不会提交部分关联
   ---
-  duration_ms: 146.6206
+  duration_ms: 164.6018
   type: 'test'
   ...
 # Subtest: 备份流式格式：原字节摘要、业务字段与导出元数据差异
 ok 12 - 备份流式格式：原字节摘要、业务字段与导出元数据差异
   ---
-  duration_ms: 161.325
+  duration_ms: 151.9438
   type: 'test'
   ...
 # Subtest: 损坏ZIP、摘要不一致、额外条目均拒绝且不改变原库
 ok 13 - 损坏ZIP、摘要不一致、额外条目均拒绝且不改变原库
   ---
-  duration_ms: 90.0372
+  duration_ms: 88.5467
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 单资料库排他锁与未知格式保护
 ok 14 - 单资料库排他锁与未知格式保护
   ---
-  duration_ms: 515.6978
+  duration_ms: 499.7131
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 搜索、字面匹配、标签交集、分页作废与双向引用
 ok 15 - 搜索、字面匹配、标签交集、分页作废与双向引用
   ---
-  duration_ms: 480.7785
+  duration_ms: 501.0452
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 重建期间编辑、删除、标签变更和同名激活均进入新版本
 ok 16 - 重建期间编辑、删除、标签变更和同名激活均进入新版本
   ---
-  duration_ms: 1447.021
+  duration_ms: 1429.8594
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 正常恢复有保护备份，新epoch拒绝旧保存，保留本机历史
 ok 17 - 正常恢复有保护备份，新epoch拒绝旧保存，保留本机历史
   ---
-  duration_ms: 813.6508
+  duration_ms: 730.8905
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 主库损坏时故障恢复不依赖旧库有效备份，原文件逐字节保留
 ok 18 - 主库损坏时故障恢复不依赖旧库有效备份，原文件逐字节保留
   ---
-  duration_ms: 660.7736
+  duration_ms: 639.2914
   type: 'test'
   ...
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:53156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:48172) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 恢复暂存失败不会切换活动库或改变原始正文
 ok 19 - 恢复暂存失败不会切换活动库或改变原始正文
   ---
-  duration_ms: 618.1792
+  duration_ms: 556.4372
   type: 'test'
   ...
-# (node:43808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:30916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 四种公式定界符，转义、金额和未完成输入
 ok 20 - 四种公式定界符，转义、金额和未完成输入
   ---
-  duration_ms: 1.64
+  duration_ms: 1.6691
   type: 'test'
   ...
 # Subtest: 公式、代码和转义不产生引用，重命名只改真实引用
 ok 21 - 公式、代码和转义不产生引用，重命名只改真实引用
   ---
-  duration_ms: 9.9867
+  duration_ms: 10.2914
   type: 'test'
   ...
 # Subtest: 分式、积分、矩阵、对齐和中文公式；代码与多行块保持结构
 ok 22 - 分式、积分、矩阵、对齐和中文公式；代码与多行块保持结构
   ---
-  duration_ms: 7.4241
+  duration_ms: 10.008
   type: 'test'
   ...
 # Subtest: 错误公式安全回退，限制宏展开与不可信HTML命令
 ok 23 - 错误公式安全回退，限制宏展开与不可信HTML命令
   ---
-  duration_ms: 3.6239
+  duration_ms: 3.1274
   type: 'test'
   ...
 # Subtest: 旧版派生引用目录原子刷新，记录全部笔记供索引追赶，正文与修订号不变
 ok 24 - 旧版派生引用目录原子刷新，记录全部笔记供索引追赶，正文与修订号不变
   ---
-  duration_ms: 126.9003
+  duration_ms: 124.5749
   type: 'test'
   ...
-# (node:50472) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:38044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 跨页置顶先排序再分页，收藏筛选与标签筛选取交集
 ok 25 - 跨页置顶先排序再分页，收藏筛选与标签筛选取交集
   ---
-  duration_ms: 316.1441
+  duration_ms: 317.903
   type: 'test'
   ...
 # Subtest: 大纲按源文位置处理ATX/Setext、重复标题、CRLF，排除代码与公式
 ok 26 - 大纲按源文位置处理ATX/Setext、重复标题、CRLF，排除代码与公式
   ---
-  duration_ms: 3.4941
+  duration_ms: 3.4715
   type: 'test'
   ...
 # Subtest: 补全复用引用语义：特殊字符、转义、代码、公式与已有闭括号
 ok 27 - 补全复用引用语义：特殊字符、转义、代码、公式与已有闭括号
   ---
-  duration_ms: 0.6321
+  duration_ms: 0.6394
   type: 'test'
   ...
 # Subtest: 收藏置顶排序、幂等、回收恢复保留、永久删除清理及失败回滚
 ok 28 - 收藏置顶排序、幂等、回收恢复保留、永久删除清理及失败回滚
   ---
-  duration_ms: 93.7111
+  duration_ms: 91.9793
   type: 'test'
   ...
 # Subtest: 模板新建为原子操作、同名自动编号、独立副本、限制与回滚
 ok 29 - 模板新建为原子操作、同名自动编号、独立副本、限制与回滚
   ---
-  duration_ms: 95.8921
+  duration_ms: 106.4024
   type: 'test'
   ...
 # Subtest: 格式2完整备份保留收藏、置顶、自定义模板，新库导入后可继续使用
 ok 30 - 格式2完整备份保留收藏、置顶、自定义模板，新库导入后可继续使用
   ---
-  duration_ms: 227.3173
+  duration_ms: 241.9797
   type: 'test'
   ...
-# (node:50472) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:38044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 服务补全排除回收站、规范化字面查询；收藏搜索分页与恢复一致
 ok 31 - 服务补全排除回收站、规范化字面查询；收藏搜索分页与恢复一致
   ---
-  duration_ms: 354.6678
+  duration_ms: 362.1961
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 备份拒绝重复字段、额外条目、符号链接与未知格式
 ok 32 - 备份拒绝重复字段、额外条目、符号链接与未知格式
   ---
-  duration_ms: 198.0552
+  duration_ms: 184.2129
   type: 'test'
   ...
 # Subtest: 备份拒绝错误顶层类型、无效外键、伪造摘要、非法UTF-8
 ok 33 - 备份拒绝错误顶层类型、无效外键、伪造摘要、非法UTF-8
   ---
-  duration_ms: 166.9274
+  duration_ms: 174.6406
   type: 'test'
   ...
 # Subtest: 正文容量在流式解析时拒绝超限
 ok 34 - 正文容量在流式解析时拒绝超限
   ---
-  duration_ms: 184.1473
+  duration_ms: 183.7871
   type: 'test'
   ...
 # Subtest: 组合字符和emoji高亮映回完整原字符区间
 ok 35 - 组合字符和emoji高亮映回完整原字符区间
   ---
-  duration_ms: 9.8907
+  duration_ms: 10.8126
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 同名新建重新绑定，恢复改名不猜测历史自引用
 ok 36 - 同名新建重新绑定，恢复改名不猜测历史自引用
   ---
-  duration_ms: 502.2665
+  duration_ms: 493.8127
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 120条结果翻页50/50/20且无重复
 ok 37 - 120条结果翻页50/50/20且无重复
   ---
-  duration_ms: 1668.0965
+  duration_ms: 1780.0581
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 正常恢复保护备份失败／切换前失败保持旧库完整
 ok 38 - 正常恢复保护备份失败／切换前失败保持旧库完整
   ---
-  duration_ms: 719.5023
+  duration_ms: 714.2875
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 控制库损坏恢复保留原控制材料及原业务文件
 ok 39 - 控制库损坏恢复保留原控制材料及原业务文件
   ---
-  duration_ms: 806.7214
+  duration_ms: 670.1011
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 禁止导出覆盖内部数据库，未知IPC字段被拒绝
 ok 40 - 禁止导出覆盖内部数据库，未知IPC字段被拒绝
   ---
-  duration_ms: 344.5281
+  duration_ms: 324.7599
   type: 'test'
   ...
-# (node:68592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (node:7532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: 已提交正文在强制结束真实进程后仍可读取（不是断电验证）
 ok 41 - 已提交正文在强制结束真实进程后仍可读取（不是断电验证）
   ---
-  duration_ms: 676.7375
+  duration_ms: 595.1961
   type: 'test'
   ...
 # Subtest: 旧格式1可读取，格式1不得混入新版元数据
 ok 42 - 旧格式1可读取，格式1不得混入新版元数据
   ---
-  duration_ms: 120.3669
+  duration_ms: 110.6733
   type: 'test'
   ...
 1..42
@@ -307,5 +307,5 @@ ok 42 - 旧格式1可读取，格式1不得混入新版元数据
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 5868.1706
+# duration_ms 5615.2977
 

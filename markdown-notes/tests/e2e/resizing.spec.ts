@@ -63,6 +63,7 @@ for (const width of [1480, 1080]) {
       };
       await resize(width);
       await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+      await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
       const text = '# 自由调整工作区\n\n拖动或收起侧栏时，保留正在输入的内容。\n\n[[双向引用]]';
       await page.getByRole('textbox', { name: 'Markdown编辑器' }).fill(text);
       let sidebar = page.getByRole('separator', { name: '调整导航栏宽度' });

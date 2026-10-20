@@ -14,6 +14,7 @@ test('自定义颜色与图片背景：本机记忆、独立副本、带背景�
   try {
     let page = await app.firstWindow();
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page
       .getByRole('textbox', { name: 'Markdown编辑器' })
       .fill(

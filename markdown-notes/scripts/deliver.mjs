@@ -4,6 +4,7 @@ import { resolve, join, relative, sep } from 'node:path';
 import { createHash } from 'node:crypto';
 import { pipeline } from 'node:stream/promises';
 import yazl from 'yazl';
+import { packageDirectory } from './package-directory.mjs';
 
 const project = process.cwd();
 const { version } = JSON.parse(await readFile('package.json', 'utf8'));
@@ -38,7 +39,7 @@ async function zip(output, entries) {
   };
 }
 
-const packaged = resolve('release/知页-win-x64');
+const packaged = packageDirectory();
 const compiled = await files(resolve('dist'));
 const integrity = [];
 for (const file of compiled) {

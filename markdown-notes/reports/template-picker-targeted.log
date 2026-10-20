@@ -1,0 +1,11 @@
+
+Running 4 tests using 1 worker
+
+(node:40128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\productivity.spec.ts:21:5 › 新建入口直接选模板：取消不创建、Ctrl+N、内置与自定义、草稿保护及空白新建 (2.2s)
+  ok 2 tests\e2e\productivity.spec.ts:79:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.5s)
+  ok 3 tests\e2e\productivity.spec.ts:119:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (2.9s)
+  ok 4 tests\e2e\productivity.spec.ts:173:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (3.9s)
+
+  4 passed (12.0s)

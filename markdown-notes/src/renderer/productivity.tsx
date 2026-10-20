@@ -97,6 +97,103 @@ export function ReferenceSuggest({
   );
 }
 
+export function TemplatePicker({
+  onCreate,
+  onError,
+}: {
+  onCreate(id?: string): Promise<void>;
+  onError(message: string): void;
+}) {
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true),
+    [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const flight = useRef(false);
+  useEffect(() => {
+    let alive = true;
+    api
+      .call('template.list')
+      .then((result) => {
+        if (alive) setItems(result);
+      })
+      .catch((e) => {
+        if (alive) setError(e.message || '模板暂时无法读取，请稍后重新打开。');
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  const create = async (id?: string) => {
+    if (flight.current) return;
+    flight.current = true;
+    setBusy(true);
+    try {
+      await onCreate(id);
+    } catch (e: any) {
+      onError(e.message || '新建失败，请重试。');
+    } finally {
+      flight.current = false;
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="template-picker">
+      <p className="muted">选择空白笔记，或从模板开始。点击后创建一篇独立笔记。</p>
+      <div className="template-choices" aria-label="选择笔记模板">
+        <button
+          className="template-choice blank-choice"
+          aria-label="创建空白笔记"
+          disabled={busy}
+          onClick={() => void create()}
+        >
+          <strong>空白笔记</strong>
+          <small>自由写作</small>
+          <p>从一张干净的纸开始，写下你的想法。</p>
+        </button>
+        {items.map((t) => (
+          <button
+            className="template-choice"
+            key={t.template_id}
+            aria-label={'使用模板：' + t.title}
+            disabled={busy}
+            onClick={() => void create(t.template_id)}
+          >
+            <strong>{t.title}</strong>
+            <small>{t.builtin ? '内置模板' : '自定义模板'}</small>
+            <p>
+              {t.content
+                .replace(/^#{1,6}\s+/gm, '')
+                .replace(/\s+/g, ' ')
+                .slice(0, 85) || '使用这份模板开始记录。'}
+            </p>
+          </button>
+        ))}
+      </div>
+      {loading && (
+        <p className="muted" role="status">
+          正在加载模板…
+        </p>
+      )}
+      {error && (
+        <p className="form-hint" role="alert">
+          {error}
+        </p>
+      )}
+      {busy && (
+        <p className="muted" role="status">
+          正在保存当前内容并创建笔记…
+        </p>
+      )}
+      <p className="form-hint">
+        需要维护模板时，可打开左侧“笔记模板”；也可以将当前笔记保存为模板。
+      </p>
+    </div>
+  );
+}
+
 export function TemplateManager({
   onCreate,
   onError,

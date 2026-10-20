@@ -17,10 +17,73 @@ async function launch(root = mkdtempSync(join(tmpdir(), 'zhiye-workflow-'))) {
   await expect(page.getByRole('button', { name: '新建笔记', exact: true })).toBeEnabled();
   return { app, page, root };
 }
+
+test('新建入口直接选模板：取消不创建、Ctrl+N、内置与自定义、草稿保护及空白新建', async () => {
+  const { app, page } = await launch();
+  try {
+    const count = () => page.evaluate(async () => (await window.notesApi.call('note.list')).total);
+    await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    const picker = page.getByRole('dialog', { name: '新建笔记', exact: true });
+    await expect(picker.getByRole('button', { name: '创建空白笔记' })).toBeVisible();
+    await expect(
+      picker.getByRole('button', { name: '使用模板：课程笔记', exact: true }),
+    ).toBeVisible();
+    expect(await count()).toBe(0);
+    await page.keyboard.press('Escape');
+    await expect(picker).toHaveCount(0);
+    expect(await count()).toBe(0);
+    await page.keyboard.press('Control+n');
+    await expect(picker).toBeVisible();
+    await picker.getByRole('button', { name: '使用模板：课程笔记', exact: true }).click();
+    await expect(picker).toHaveCount(0);
+    const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
+    await expect(editor).toHaveValue(/## 核心概念/);
+    await expect(editor).toBeFocused();
+    const oldId = await page.evaluate(
+      async () => (await window.notesApi.call('note.list')).items[0].note_id,
+    );
+    await editor.fill('尚未等自动保存的课程草稿');
+    await page.keyboard.press('Control+n');
+    await picker.getByRole('button', { name: '使用模板：会议记录', exact: true }).click();
+    await expect(editor).toHaveValue(/## 讨论要点/);
+    expect(
+      await page.evaluate(
+        async (id) => (await window.notesApi.call('note.get', { note_id: id })).content,
+        oldId,
+      ),
+    ).toBe('尚未等自动保存的课程草稿');
+    await page.evaluate(async () => {
+      await window.notesApi.call('template.save', {
+        title: '每周复盘',
+        content: '# 每周复盘\n\n## 下周计划',
+      });
+    });
+    await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await expect(
+      picker.getByRole('button', { name: '使用模板：每周复盘', exact: true }),
+    ).toBeVisible();
+    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(1080, 700));
+    await expect.poll(() => page.evaluate(() => innerWidth)).toBe(1080);
+    expect(await picker.evaluate((e) => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
+    await page.screenshot({
+      animations: 'disabled',
+      path: 'test-results/知页-新建笔记选择模板.png',
+    });
+    await picker.getByRole('button', { name: '使用模板：每周复盘', exact: true }).click();
+    await expect(editor).toHaveValue('# 每周复盘\n\n## 下周计划');
+    await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await picker.getByRole('button', { name: '创建空白笔记' }).click();
+    await expect(editor).toHaveValue('');
+    expect(await count()).toBe(4);
+  } finally {
+    await app.close();
+  }
+});
 test('大纲：源码/阅读/即时跳转，重复标题与小窗口布局', async () => {
   const { app, page } = await launch();
   try {
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
     const text =
       '# 第一章\n\n' +
@@ -64,6 +127,7 @@ test('引用补全：源码与即时输入、特殊字符、Esc、键盘选择�
       await window.notesApi.call('note.create', { title: '代数基础' });
     });
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
     await editor.fill('前文 [[');
     const list = page.getByRole('listbox', { name: '引用自动补全' });
@@ -124,6 +188,7 @@ test('模板、收藏、置顶：自定义复用、收藏搜索、回收恢复�
     await page.getByRole('button', { name: '收藏笔记', exact: true }).last().click();
     await page.getByRole('button', { name: '置顶笔记', exact: true }).click();
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await expect(page.locator('.note-card').first()).toContainText('课程笔记');
     await page.getByRole('button', { name: '收藏笔记', exact: true }).first().click();
     await expect(page.locator('.note-card')).toHaveCount(1);

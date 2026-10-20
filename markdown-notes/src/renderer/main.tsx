@@ -54,7 +54,7 @@ import { codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
 import './style.css';
 import { outline } from '../shared/productivity';
-import { ReferenceSuggest, TemplateManager } from './productivity';
+import { ReferenceSuggest, TemplateManager, TemplatePicker } from './productivity';
 import { version as APP_VERSION } from '../../package.json';
 import { usePaneLayout, PaneDivider } from './pane-layout';
 import { AppearanceSettings, applyAppearance } from './appearance';
@@ -333,24 +333,10 @@ function App() {
       }),
     [act, view, installNote],
   );
-  const create = useCallback(
-    () =>
-      act('新建笔记', async () => {
-        if (!statusRef.current?.epoch) throw new Error('资料库仍在打开，请稍候');
-        const result = await api.call('note.create');
-        setView('all');
-        setQuery('');
-        setFilters([]);
-        setPage(1);
-        installNote(result.note);
-        setRefresh((n) => n + 1);
-        setTimeout(() => {
-          editor.current?.focus();
-          liveEditor.current?.focus();
-        }, 40);
-      }),
-    [act, installNote],
-  );
+  const create = useCallback(() => {
+    if (!statusRef.current?.epoch || statusRef.current?.fault || busy) return;
+    setModal({ type: 'newNote' });
+  }, [busy]);
   const closeModal = useCallback(() => {
     if (!busy) setModal(null);
   }, [busy]);
@@ -605,16 +591,25 @@ function App() {
       installNote(result.note);
       setRefresh((n) => n + 1);
     });
-  const fromTemplate = async (id: string) => {
-    await flush();
-    const result = await api.call('note.create', { template_id: id });
-    installNote(result.note);
-    setView('all');
-    setFilters([]);
-    setQuery('');
-    setPage(1);
-    setModal(null);
-    setRefresh((n) => n + 1);
+  const fromTemplate = async (id?: string) => {
+    setBusy('新建笔记');
+    try {
+      await flush();
+      const result = await api.call('note.create', id ? { template_id: id } : {});
+      installNote(result.note);
+      setView('all');
+      setFilters([]);
+      setQuery('');
+      setPage(1);
+      setModal(null);
+      setRefresh((n) => n + 1);
+      setTimeout(() => {
+        editor.current?.focus();
+        liveEditor.current?.focus();
+      }, 40);
+    } finally {
+      setBusy('');
+    }
   };
   const toggleTag = (tag_id: string) => {
     const d = draftRef.current;
@@ -1630,12 +1625,16 @@ function App() {
               restore: '恢复预检',
               pdfExport: '导出PDF',
               templates: '笔记模板',
+              newNote: '新建笔记',
               saveTemplate: '保存为模板',
             }[modal.type] ?? '设置'
           }
           onClose={closeModal}
-          wide={['settings', 'restore', 'templates'].includes(modal.type)}
+          wide={['settings', 'restore', 'templates', 'newNote'].includes(modal.type)}
         >
+          {modal.type === 'newNote' && (
+            <TemplatePicker onCreate={fromTemplate} onError={(message) => notify(message, true)} />
+          )}
           {modal.type === 'templates' && (
             <TemplateManager onCreate={fromTemplate} onError={(message) => notify(message, true)} />
           )}
@@ -2048,7 +2047,8 @@ function App() {
                 <div className="settings-content help">
                   <h3>一个小而完整的知识整理流程</h3>
                   <p>
-                    新建笔记 → Markdown写作 → 添加标签 → 搜索回顾 → 用双向引用连接 → 定期完整备份。
+                    新建笔记 → 选择空白或模板 → Markdown写作 → 添加标签 → 搜索回顾 → 用双向引用连接
+                    → 定期完整备份。
                   </p>
                   <div className="help-shortcuts">
                     <span>

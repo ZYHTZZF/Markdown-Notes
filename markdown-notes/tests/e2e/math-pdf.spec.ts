@@ -23,6 +23,7 @@ test('离线公式预览与真实PDF：中文、四种定界符、矩阵、长�
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
     const content =
       String.raw`# 数学公式与中文离线导出
@@ -122,6 +123,7 @@ test('错误公式与恶意命令不执行；打印失败保留旧PDF、清理�
   try {
     const page = await app.firstWindow();
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page.getByRole('textbox', { name: 'Markdown编辑器' }).fill(String.raw`# 错误公式
 
 $\frac{$

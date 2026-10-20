@@ -34,6 +34,7 @@ for (const mode of ['close', 'destroy']) {
       () => !document.querySelector('.topbar .new-button')?.hasAttribute('disabled'),
     );
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page
       .getByRole('textbox', { name: 'Markdown编辑器' })
       .fill('关闭并发诊断，仅使用临时合成资料');

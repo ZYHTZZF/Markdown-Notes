@@ -20,6 +20,7 @@ test('即时编辑：##空格生成二级标题、列表、粗体、撤销与源
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page.getByRole('button', { name: '即时', exact: true }).click();
     const editor = page.getByRole('textbox', { name: '即时编辑器', exact: true });
     await expect(editor).toBeVisible();
@@ -77,6 +78,7 @@ test('原文保留、公式表格、中文组合输入、模式记忆与关闭�
     page = first.page;
   try {
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     const original =
       '# 原有笔记\r\n\r\n**中文粗体** 与 [[知识库]]\r\n\r\n$E=mc^2$\r\n\r\n$$\r\n\\frac{1}{2}+\\text{中文说明}\r\n$$\r\n\r\n| A | B |\r\n|---|---|\r\n| 1 | 2 |\r\n\r\n```tex\r\n$保持原样$\r\n```';
     const note = await page.evaluate(async (text) => {
@@ -142,6 +144,7 @@ test('即时模式小窗口、原文粘贴、安全显示与回收站只读', as
   try {
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(1080, 700));
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page.getByRole('button', { name: '即时', exact: true }).click();
     const editor = page.getByRole('textbox', { name: '即时编辑器', exact: true });
     await editor.click();

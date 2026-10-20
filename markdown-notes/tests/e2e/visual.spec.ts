@@ -114,6 +114,7 @@ for (const [width, height] of [
         path: `test-results/清透-${width}-空状态.png`,
       });
       await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+      await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
       const editor = page.getByRole('textbox', { name: 'Markdown编辑器' });
       const content =
         '# 清晰记录，轻盈连接\n\n白色的纸面，让内容成为主角。\n\n## 今日的思考\n\n- [x] 整理课程笔记\n- 留下值得回顾的想法\n\n[[关联笔记]]\n\n> 少一点干扰，多一点专注。\n\n' +
@@ -251,6 +252,7 @@ test('窗口控制、减少动态效果、模式偏好及关闭前保存兼容',
   try {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+    await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
     await page.getByRole('textbox', { name: 'Markdown编辑器' }).fill('立即关闭前的输入必须保存');
     await page.getByRole('button', { name: '阅读', exact: true }).click();
     await expect(page.locator('.markdown')).toContainText('立即关闭前的输入必须保存');

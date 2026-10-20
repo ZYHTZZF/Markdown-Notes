@@ -1,17 +1,17 @@
 {
-  "date": "2026-10-20T12:35:50.333Z",
+  "date": "2026-10-20T12:51:05.234Z",
   "pass": true,
-  "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
+  "executable": "I:\\软件工程\\markdown-notes\\release\\知页-v1.5.1-win-x64\\知页.exe",
   "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
   "runtime": {
     "packaged": true,
-    "version": "1.5.0",
+    "version": "1.5.1",
     "electron": "44.9.1",
     "node": "24.22.0"
   },
   "checks": [
     "成品EXE独立启动",
-    "新建与编辑",
+    "新建直接选择空白／模板并编辑",
     "安全Markdown预览",
     "自动持久化",
     "成品离线数学公式预览与真实PDF导出",

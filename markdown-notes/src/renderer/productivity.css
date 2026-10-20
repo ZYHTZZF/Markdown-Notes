@@ -60,6 +60,51 @@
 .template-manager {
   padding: 0 24px 24px;
 }
+.template-picker {
+  padding: 0 24px 24px;
+}
+.template-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-height: 400px;
+  overflow: auto;
+  padding: 6px 4px;
+  margin: 14px -4px;
+}
+.template-choice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-content: start;
+  min-height: 114px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  text-align: left;
+}
+.template-choice strong {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.template-choice small {
+  color: var(--muted);
+}
+.template-choice p {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.template-choice:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--selection);
+}
+.blank-choice {
+  border-color: var(--accent);
+}
 .template-grid {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);

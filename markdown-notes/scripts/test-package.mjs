@@ -4,7 +4,8 @@ import { mkdtempSync, mkdirSync, writeFileSync, createReadStream, readFileSync }
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
-const exe = resolve('release/知页-win-x64/知页.exe'),
+import { packageDirectory } from './package-directory.mjs';
+const exe = join(packageDirectory(), '知页.exe'),
   root = mkdtempSync(join(tmpdir(), 'zhiye-packaged-'));
 const env = { ...process.env, ZHIYE_DATA_DIR: root };
 delete env.ELECTRON_RUN_AS_NODE;
@@ -12,6 +13,7 @@ const app = await _electron.launch({ executablePath: exe, args: [], env });
 try {
   const page = await app.firstWindow();
   await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+  await page.getByRole('button', { name: '创建空白笔记', exact: true }).click();
   await page
     .getByRole('textbox', { name: 'Markdown编辑器' })
     .fill(
@@ -68,9 +70,8 @@ try {
   await page.getByRole('button', { name: '保存为模板', exact: true }).click();
   await page.getByRole('textbox', { name: '模板名称' }).fill('成品验证模板');
   await page.getByRole('button', { name: '保存模板', exact: true }).click();
-  await page.getByRole('button', { name: '笔记模板', exact: true }).click();
-  await page.getByRole('button', { name: /成品验证模板.*自定义/ }).click();
-  await page.getByRole('button', { name: '用此模板新建' }).click();
+  await page.getByRole('button', { name: '新建笔记', exact: true }).click();
+  await page.getByRole('button', { name: '使用模板：成品验证模板', exact: true }).click();
   await page.getByRole('button', { name: '分屏', exact: true }).click();
   const source = page.getByRole('textbox', { name: 'Markdown编辑器' });
   await source.fill('[[成品验证模');
@@ -116,7 +117,7 @@ try {
     runtime,
     checks: [
       '成品EXE独立启动',
-      '新建与编辑',
+      '新建直接选择空白／模板并编辑',
       '安全Markdown预览',
       '自动持久化',
       '成品离线数学公式预览与真实PDF导出',
