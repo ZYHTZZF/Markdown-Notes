@@ -1,3 +1,4 @@
+import { validateProductivity, BUILTIN_TEMPLATES, templateSchema } from '../shared/productivity';
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID, createHash } from 'node:crypto';
 import { mkdirSync, existsSync } from 'node:fs';
@@ -48,7 +49,7 @@ export class Store {
     if (!meta || meta.schema_version !== 1) fail('E_VERSION', '不支持的资料库版本');
     if (create) this.refreshReferenceRules();
   }
-  /** Derived catalogue revision only; the source schema and backup format remain version 1. */
+  /** Derived catalogue revision only; the SQLite source schema remains version 1. */
   private refreshReferenceRules() {
     const revision = (this.db.prepare('PRAGMA user_version').get() as any).user_version;
     if (revision >= 1) return;
@@ -121,29 +122,41 @@ export class Store {
         'SELECT t.tag_id,t.user_id,t.name,t.created_at,t.updated_at FROM tags t JOIN note_tags a ON a.tag_id=t.tag_id WHERE a.note_id=? ORDER BY t.name',
       )
       .all(id) as unknown as Tag[];
-    return { ...n, tags };
+    const p = this.profile().preferences;
+    return {
+      ...n,
+      tags,
+      favorite: ((p.favorites as string[]) ?? []).includes(id),
+      pinned: ((p.pinned as string[]) ?? []).includes(id),
+    };
   }
-  list(trash = false, tagIds: string[] = [], page = 1) {
+  list(trash = false, tagIds: string[] = [], page = 1, favoritesOnly = false) {
     const filters = tagIds
       .map(() => 'EXISTS(SELECT 1 FROM note_tags a WHERE a.note_id=n.note_id AND a.tag_id=?)')
       .join(' AND ');
     const where = `n.deleted_at IS ${trash ? 'NOT ' : ''}NULL${filters ? ' AND ' + filters : ''}`;
-    const total = Number(
-      (this.db.prepare(`SELECT COUNT(*) n FROM notes n WHERE ${where}`).get(...tagIds) as any).n,
-    );
-    const items = this.db
-      .prepare(
-        `SELECT note_id,title,substr(content,1,160) snippet,revision,created_at,updated_at,deleted_at FROM notes n WHERE ${where} ORDER BY updated_at DESC,note_id LIMIT 50 OFFSET ?`,
-      )
-      .all(...tagIds, (page - 1) * 50)
-      .map((n: any) => ({
-        ...n,
-        tags: this.db
-          .prepare(
-            'SELECT t.tag_id,t.name FROM tags t JOIN note_tags a ON a.tag_id=t.tag_id WHERE a.note_id=? ORDER BY t.name',
-          )
-          .all(n.note_id),
-      }));
+    const pref = this.profile().preferences;
+    const favorites = new Set((pref.favorites as string[]) ?? []),
+      pinned = new Set((pref.pinned as string[]) ?? []);
+    const all = (
+      this.db
+        .prepare(
+          `SELECT note_id,title,substr(content,1,160) snippet,revision,created_at,updated_at,deleted_at FROM notes n WHERE ${where} ORDER BY updated_at DESC,note_id`,
+        )
+        .all(...tagIds) as any[]
+    ).filter((n) => !favoritesOnly || favorites.has(n.note_id));
+    if (!trash) all.sort((a, b) => Number(pinned.has(b.note_id)) - Number(pinned.has(a.note_id)));
+    const total = all.length;
+    const items = all.slice((page - 1) * 50, page * 50).map((n: any) => ({
+      ...n,
+      favorite: favorites.has(n.note_id),
+      pinned: pinned.has(n.note_id),
+      tags: this.db
+        .prepare(
+          'SELECT t.tag_id,t.name FROM tags t JOIN note_tags a ON a.tag_id=t.tag_id WHERE a.note_id=? ORDER BY t.name',
+        )
+        .all(n.note_id),
+    }));
     return { items, total, page, business_version: this.version };
   }
   stats() {
@@ -224,7 +237,14 @@ export class Store {
         changed.add(id);
       };
       if (method === 'note.create') {
-        let title = p.title ? name(p.title) : '未命名笔记',
+        const template = p.template_id
+          ? [...BUILTIN_TEMPLATES, ...((this.profile().preferences.templates as any[]) ?? [])].find(
+              (t) => t.template_id === p.template_id,
+            )
+          : null;
+        if (p.template_id && !template) fail('E_NOT_FOUND', '模板已不存在');
+        const initial = body(template?.content ?? '');
+        let title = p.title ? name(p.title) : (template?.title ?? '未命名笔记'),
           i = 1;
         while (
           this.db
@@ -232,12 +252,13 @@ export class Store {
             .get(key(title))
         ) {
           if (p.title) fail('E_NAME_CONFLICT', '已有同名笔记');
-          title = `未命名笔记 ${i++}`;
+          title = `${[...(template?.title ?? '未命名笔记')].slice(0, 90).join('')} ${i++}`;
         }
         const id = randomUUID();
         this.db
           .prepare('INSERT INTO notes VALUES(?,?,?,?,?,?,?,?,?,NULL)')
-          .run(id, this.profile().user_id, title, key(title), '', 0, 0, now, now);
+          .run(id, this.profile().user_id, title, key(title), initial, bytes(initial), 0, now, now);
+        this.updateRefs(id, initial, true);
         keys.add(key(title));
         changed.add(id);
         result = { note_id: id };
@@ -300,6 +321,13 @@ export class Store {
         keys.add(key(n.title));
         if (method === 'trash.purge') {
           this.db.prepare('DELETE FROM notes WHERE note_id=?').run(n.note_id);
+          const pref = this.profile().preferences;
+          for (const field of ['favorites', 'pinned'])
+            if (Array.isArray(pref[field]))
+              pref[field] = (pref[field] as string[]).filter((id) => id !== n.note_id);
+          this.db
+            .prepare('UPDATE profile SET preferences=?,updated_at=?')
+            .run(JSON.stringify(pref), now);
           changed.add(n.note_id);
         } else if (method === 'trash.move') {
           this.db.prepare('UPDATE notes SET deleted_at=? WHERE note_id=?').run(now, n.note_id);
@@ -353,6 +381,43 @@ export class Store {
           for (const { note_id } of ids) changed.add(note_id);
         }
         result = { affected: ids.length };
+      } else if (method === 'note.flag') {
+        const n = this.checked(p.note_id, p.expected_revision),
+          pref = this.profile().preferences;
+        const ids = new Set((pref[p.flag] as string[]) ?? []);
+        if (p.value) ids.add(n.note_id);
+        else ids.delete(n.note_id);
+        pref[p.flag] = [...ids];
+        this.db
+          .prepare('UPDATE profile SET preferences=?,updated_at=?')
+          .run(JSON.stringify(pref), now);
+        touch(n.note_id);
+        result = { note_id: n.note_id };
+      } else if (method === 'template.save' || method === 'template.delete') {
+        const pref = this.profile().preferences,
+          templates = [...((pref.templates as any[]) ?? [])];
+        const at = templates.findIndex((t) => t.template_id === p.template_id);
+        if (p.template_id && at < 0) fail('E_NOT_FOUND', '模板已不存在，请重新读取');
+        if (method === 'template.delete') {
+          if (at < 0) fail('E_NOT_FOUND', '模板不存在');
+          templates.splice(at, 1);
+        } else {
+          const t = templateSchema.parse({
+            template_id: p.template_id ?? randomUUID(),
+            title: name(p.title),
+            content: body(p.content),
+          });
+          if (templates.some((old, i) => i !== at && key(old.title) === key(t.title)))
+            fail('E_NAME_CONFLICT', '已有同名自定义模板');
+          if (at < 0) templates.push(t);
+          else templates[at] = t;
+          result.template_id = t.template_id;
+        }
+        pref.templates = templates;
+        validateProductivity(pref);
+        this.db
+          .prepare('UPDATE profile SET preferences=?,updated_at=?')
+          .run(JSON.stringify(pref), now);
       } else if (method === 'preferences') {
         const pref = { ...this.profile().preferences, ...p.preferences };
         this.db
@@ -409,6 +474,7 @@ export class Store {
   }
   import(s: Snapshot) {
     validateSnapshot(s);
+    validateProductivity(s.profile.preferences, new Set(s.notes.map((n) => n.note_id)));
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.db.exec(

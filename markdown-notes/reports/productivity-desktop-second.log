@@ -1,0 +1,122 @@
+
+Running 3 tests using 1 worker
+
+(node:27976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (6.8s)
+(node:62964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+live debug [[代数基 cm-content cm-lineWrapping
+  x  2 tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (7.6s)
+(node:37384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (7.1s)
+
+
+  1) tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 ────────────────────────────────
+
+    Error: expect(locator).toBeInViewport() failed
+
+    Locator: locator('.live-h2').last()
+    Expected: in viewport
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeInViewport" locator('.live-h2').last() with timeout 5000ms
+      - waiting for locator('.live-h2').last()
+
+
+      27 |     await page.getByRole('button',{name:'即时',exact:true}).click();
+      28 |     await drawer.locator('.outline-list button').nth(2).click();
+    > 29 |     await expect(page.locator('.live-h2').last()).toBeInViewport();
+         |                                                   ^
+      30 |     await app.evaluate(({BrowserWindow})=>{BrowserWindow.getAllWindows()[0].setSize(1080,700);});
+      31 |     await expect.poll(()=>page.evaluate(()=>innerWidth)).toBe(1080);
+      32 |     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:29:51
+
+    Error Context: test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ───────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listbox', { name: '引用自动补全' }).getByRole('option')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listbox', { name: '引用自动补全' }).getByRole('option') with timeout 5000ms
+      - waiting for getByRole('listbox', { name: '引用自动补全' }).getByRole('option')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      62 |     await live.click(); await page.keyboard.type('[['); await page.keyboard.insertText('代数基');
+      63 |     console.log('live debug', await live.textContent(), await page.evaluate(()=>document.activeElement?.className));
+    > 64 |     await expect(list.getByRole('option')).toHaveCount(1);
+         |                                            ^
+      65 |     await live.dispatchEvent('compositionstart',{data:''});
+      66 |     await live.dispatchEvent('keydown',{key:'Enter',code:'Enter',isComposing:true,bubbles:true});
+      67 |     await expect(list).toBeVisible();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:64:44
+
+    Error Context: test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ──────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.note-card')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.note-card') with timeout 5000ms
+      - waiting for locator('.note-card')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      94 |     await page.locator('.note-card').click();
+      95 |     await page.getByRole('button',{name:'删除当前笔记'}).click();
+    > 96 |     await expect(page.locator('.note-card')).toHaveCount(0);
+         |                                              ^
+      97 |     await page.getByRole('button',{name:/^回收站/}).click(); await page.locator('.note-card').click();
+      98 |     await page.getByRole('button',{name:'恢复笔记',exact:true}).click();
+      99 |     await expect(page.getByRole('button',{name:'取消收藏'})).toBeVisible();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:96:46
+
+    Error Context: test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 ─────────────────────────────────
+    tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ────────────────────────
+    tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ───────────────────────────

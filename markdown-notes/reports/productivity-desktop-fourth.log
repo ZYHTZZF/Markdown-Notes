@@ -1,0 +1,46 @@
+
+Running 3 tests using 1 worker
+
+(node:21888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\productivity.spec.ts:19:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.0s)
+  ok 2 tests\e2e\productivity.spec.ts:58:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (2.9s)
+  x  3 tests\e2e\productivity.spec.ts:111:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (7.2s)
+
+
+  1) tests\e2e\productivity.spec.ts:111:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ─────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '取消收藏' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '取消收藏' }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '取消收藏' })
+
+
+      133 |     await page.locator('.note-card').click();
+      134 |     await page.getByRole('button', { name: '恢复笔记', exact: true }).click();
+    > 135 |     await expect(page.getByRole('button', { name: '取消收藏' })).toBeVisible();
+          |                                                              ^
+      136 |     await expect(page.getByRole('button', { name: '取消置顶' })).toBeVisible();
+      137 |     await page.getByRole('button', { name: '笔记模板', exact: true }).click();
+      138 |     await page.getByRole('button', { name: /我的学习模板.*自定义/ }).click();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:135:62
+
+    Error Context: test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\productivity.spec.ts:111:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ──────────────────────────
+  2 passed (12.5s)

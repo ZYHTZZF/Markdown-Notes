@@ -88,7 +88,7 @@ test('备份拒绝重复字段、额外条目、符号链接与未知格式', as
   for (const option of [
     { extra: true },
     { duplicateManifest: true },
-    { format: 2 },
+    { format: 99 },
     { symlink: true },
   ])
     await assert.rejects(readBackup(await crafted(raw, option)));
@@ -276,4 +276,18 @@ test('已提交正文在强制结束真实进程后仍可读取（不是断电�
   } finally {
     await b.close();
   }
+});
+
+test('旧格式1可读取，格式1不得混入新版元数据', async () => {
+  const s = sample();
+  assert.equal((await readBackup(await crafted(JSON.stringify(s)))).manifest.format_version, 1);
+  s.profile.preferences.favorites = [s.notes[0].note_id];
+  await assert.rejects(readBackup(await crafted(JSON.stringify(s))));
+  assert.equal(
+    (
+      (await readBackup(await crafted(JSON.stringify(s), { format: 2 }))).snapshot.profile
+        .preferences.favorites as string[]
+    )[0],
+    s.notes[0].note_id,
+  );
 });

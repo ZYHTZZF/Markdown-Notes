@@ -232,13 +232,20 @@ const display = StateField.define<DecorationSet>({
   ],
 });
 const externalChange = Annotation.define<boolean>();
-export type LiveEditorHandle = { focus(): void; insert(a: string, b?: string): void };
+export type LiveEditorHandle = {
+  focus(): void;
+  insert(a: string, b?: string): void;
+  reveal(offset: number): void;
+  replace(start: number, end: number, text: string): void;
+};
 export const LiveEditor = forwardRef<
   LiveEditorHandle,
   {
     value: string;
     readOnly: boolean;
     onChange(value: string): void;
+    onCursor?(text: string, caret: number): void;
+    onBlur?(): void;
     onLink(kind: 'note' | 'url', target: string): void;
   }
 >(function LiveEditor(props, ref) {
@@ -253,6 +260,28 @@ export const LiveEditor = forwardRef<
     () => ({
       focus() {
         view.current?.focus();
+      },
+      reveal(offset) {
+        const v = view.current;
+        if (!v) return;
+        const at = latest.current.value.slice(0, offset).replace(/\r\n/g, '\n').length;
+        v.dispatch({
+          selection: { anchor: Math.min(at, v.state.doc.length) },
+          effects: EditorView.scrollIntoView(Math.min(at, v.state.doc.length), { y: 'center' }),
+        });
+        v.focus();
+      },
+      replace(start, end, text) {
+        const v = view.current;
+        if (!v || v.state.readOnly) return;
+        const from = latest.current.value.slice(0, start).replace(/\r\n/g, '\n').length;
+        const to = latest.current.value.slice(0, end).replace(/\r\n/g, '\n').length;
+        v.dispatch({
+          changes: { from, to, insert: text },
+          selection: { anchor: from + text.length },
+          userEvent: 'input.complete',
+        });
+        v.focus();
       },
       insert(a, b = '') {
         const v = view.current;
@@ -275,6 +304,13 @@ export const LiveEditor = forwardRef<
         doc: props.value,
         extensions: [
           EditorState.lineSeparator.of(props.value.includes('\r\n') ? '\r\n' : '\n'),
+          Prec.highest(
+            EditorView.domEventHandlers({
+              keydown(event) {
+                return event.isComposing || event.keyCode === 229;
+              },
+            }),
+          ),
           Prec.highest(
             keymap.of([
               {
@@ -309,6 +345,14 @@ export const LiveEditor = forwardRef<
           EditorView.contentAttributes.of({ 'aria-label': '即时编辑器', spellcheck: 'false' }),
           EditorView.updateListener.of((update) => {
             if (
+              (update.docChanged || update.selectionSet) &&
+              update.view.hasFocus &&
+              update.state.selection.main.empty
+            ) {
+              const caret = update.state.sliceDoc(0, update.state.selection.main.head).length;
+              latest.current.onCursor?.(update.state.sliceDoc(), caret);
+            }
+            if (
               update.docChanged &&
               !update.transactions.some((tr) => tr.annotation(externalChange))
             ) {
@@ -318,6 +362,10 @@ export const LiveEditor = forwardRef<
             }
           }),
           EditorView.domEventHandlers({
+            blur() {
+              latest.current.onBlur?.();
+              return false;
+            },
             click(event) {
               if (!(event.ctrlKey || event.metaKey)) return false;
               const e = (event.target as HTMLElement).closest<HTMLElement>(

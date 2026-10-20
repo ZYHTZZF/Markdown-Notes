@@ -1,3 +1,4 @@
+import { productivitySchema, validateProductivity } from '../shared/productivity';
 import {
   createReadStream,
   createWriteStream,
@@ -47,6 +48,7 @@ const id = z.string().uuid(),
   version = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 const pref = z
   .object({
+    ...productivitySchema.shape,
     font_size: z.number().int().min(12).max(24).optional(),
     mode: z.enum(['edit', 'split', 'read']).optional(),
   })
@@ -80,7 +82,7 @@ const tag = z
 const association = z.object({ note_id: id, tag_id: id, created_at: time }).strict();
 const manifestSchema = z
   .object({
-    format_version: z.literal(1),
+    format_version: z.union([z.literal(1), z.literal(2)]),
     backup_id: id,
     snapshot_at: time,
     note_count: version,
@@ -271,7 +273,16 @@ export async function readBackup(file: string) {
       parsed.noteCount !== manifest.note_count
     )
       fail('E_PACKAGE', '备份摘要、CRC、长度或数量不一致');
+    if (
+      manifest.format_version === 1 &&
+      ['favorites', 'pinned', 'templates'].some((k) => k in parsed.snapshot.profile.preferences)
+    )
+      fail('E_VERSION', '旧备份格式不能声明新版元数据');
     validateSnapshot(parsed.snapshot);
+    validateProductivity(
+      parsed.snapshot.profile.preferences,
+      new Set(parsed.snapshot.notes.map((n) => n.note_id)),
+    );
     return { snapshot: parsed.snapshot, manifest, packageHash: await digest(file) };
   } finally {
     zip.close();
@@ -295,6 +306,7 @@ async function* snapshotChunks(s: Snapshot) {
 
 export async function writeBackup(s: Snapshot, directory: string) {
   validateSnapshot(s);
+  validateProductivity(s.profile.preferences, new Set(s.notes.map((n) => n.note_id)));
   mkdirSync(directory, { recursive: true });
   const backup_id = randomUUID(),
     snapshot_at = new Date().toISOString(),
@@ -310,7 +322,7 @@ export async function writeBackup(s: Snapshot, directory: string) {
     data_size_bytes += b.length;
   }
   const manifest = {
-    format_version: 1,
+    format_version: 2,
     backup_id,
     snapshot_at,
     note_count: s.notes.length,
@@ -358,6 +370,8 @@ export async function exportNotes(s: Snapshot, target: string, noteId?: string, 
         notes: notes.map((n) => ({
           note_id: n.note_id,
           title: n.title,
+          favorite: ((s.profile.preferences.favorites as string[]) ?? []).includes(n.note_id),
+          pinned: ((s.profile.preferences.pinned as string[]) ?? []).includes(n.note_id),
           tag_names: s.note_tags
             .filter((a) => a.note_id === n.note_id)
             .map((a) => s.tags.find((t) => t.tag_id === a.tag_id)!.name),

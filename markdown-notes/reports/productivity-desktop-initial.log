@@ -1,0 +1,128 @@
+
+Running 3 tests using 1 worker
+
+(node:36988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (31.9s)
+(node:20276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (7.4s)
+(node:66216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\e2e\productivity.spec.ts:75:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (31.3s)
+
+
+  1) tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 ────────────────────────────────
+
+    TimeoutError: locator.click: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '阅读', exact: true })
+        - locator resolved to <button class="" aria-pressed="false">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <button>…</button> from <aside aria-label="目录大纲" class="reference-panel">…</aside> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <button>…</button> from <aside aria-label="目录大纲" class="reference-panel">…</aside> subtree intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        58 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <button>…</button> from <aside aria-label="目录大纲" class="reference-panel">…</aside> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      22 |     await drawer.locator('.outline-list button').nth(2).click();
+      23 |     expect(await editor.evaluate((t:HTMLTextAreaElement)=>t.selectionStart)).toBe(text.lastIndexOf('## 重复标题'));
+    > 24 |     await page.getByRole('button',{name:'阅读',exact:true}).click();
+         |                                                           ^
+      25 |     await drawer.locator('.outline-list button').nth(2).click();
+      26 |     await expect(page.locator('.markdown h2').last()).toBeInViewport();
+      27 |     await page.getByRole('button',{name:'即时',exact:true}).click();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:24:59
+
+    Error Context: test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-大纲：源码-阅读-即时跳转，重复标题与小窗口布局\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ───────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listbox', { name: '引用自动补全' }).getByRole('option')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listbox', { name: '引用自动补全' }).getByRole('option') with timeout 5000ms
+      - waiting for getByRole('listbox', { name: '引用自动补全' }).getByRole('option')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      61 |     const live=page.getByRole('textbox',{name:'即时编辑器'});
+      62 |     await live.click(); await page.keyboard.type('[['); await page.keyboard.insertText('代数基');
+    > 63 |     await expect(list.getByRole('option')).toHaveCount(1);
+         |                                            ^
+      64 |     await live.dispatchEvent('compositionstart',{data:''});
+      65 |     await live.dispatchEvent('keydown',{key:'Enter',code:'Enter',isComposing:true,bubbles:true});
+      66 |     await expect(list).toBeVisible();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:63:44
+
+    Error Context: test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\e2e\productivity.spec.ts:75:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ──────────────────────────
+
+    TimeoutError: locator.click: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '课程笔记内置' })
+
+
+      77 |   try {
+      78 |     await page.getByRole('button',{name:'笔记模板',exact:true}).click();
+    > 79 |     await page.getByRole('button',{name:'课程笔记内置'}).click();
+         |                                                    ^
+      80 |     await page.getByRole('button',{name:'用此模板新建'}).click();
+      81 |     const editor=page.getByRole('textbox',{name:'Markdown编辑器'});
+      82 |     await expect(editor).toContainText('');
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:79:52
+
+    Error Context: test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 ─────────────────────────────────
+    tests\e2e\productivity.spec.ts:39:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ────────────────────────
+    tests\e2e\productivity.spec.ts:75:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ───────────────────────────

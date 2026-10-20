@@ -2,12 +2,12 @@
   "width": 1480,
   "height": 940,
   "contrast": {
-    "checked": 94,
+    "checked": 98,
     "minimum": 5.124659073213778,
     "failures": []
   },
   "drawerContrast": {
-    "checked": 102,
+    "checked": 106,
     "minimum": 5.124659073213778,
     "failures": []
   },

@@ -36,6 +36,8 @@ export interface Snapshot {
   note_tags: NoteTag[];
 }
 export interface NoteView extends Note {
+  favorite: boolean;
+  pinned: boolean;
   tags: Tag[];
 }
 export interface RefSpan {

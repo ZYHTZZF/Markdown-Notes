@@ -1,0 +1,89 @@
+
+Running 3 tests using 1 worker
+
+(node:31312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\productivity.spec.ts:12:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.1s)
+  x  2 tests\e2e\productivity.spec.ts:40:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (7.6s)
+(node:31580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+delete debug {
+  list: { items: [ [Object] ], total: 1, page: 1, business_version: 6 },
+  status: '已保存为自定义模板',
+  heading: '收藏笔记'
+}
+  x  3 tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (7.0s)
+
+
+  1) tests\e2e\productivity.spec.ts:40:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ───────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('listbox', { name: '引用自动补全' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('listbox', { name: '引用自动补全' }) with timeout 5000ms
+      - waiting for getByRole('listbox', { name: '引用自动补全' })
+
+
+      65 |     await live.dispatchEvent('compositionstart',{data:''});
+      66 |     await live.dispatchEvent('keydown',{key:'Enter',code:'Enter',isComposing:true,bubbles:true});
+    > 67 |     await expect(list).toBeVisible();
+         |                        ^
+      68 |     await live.dispatchEvent('compositionend',{data:'基'});
+      69 |     await page.keyboard.press('Enter');
+      70 |     await expect(list).toHaveCount(0);
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:67:24
+
+    Error Context: test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ──────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.note-card')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.note-card') with timeout 5000ms
+      - waiting for locator('.note-card')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+       95 |     await page.getByRole('button',{name:'删除当前笔记'}).click();
+       96 |     console.log('delete debug',await page.evaluate(async()=>({list:await window.notesApi.call('note.list',{favorites_only:true}),status:document.querySelector('.toast')?.textContent, heading:document.querySelector('.list-heading h1')?.textContent})));
+    >  97 |     await expect(page.locator('.note-card')).toHaveCount(0);
+          |                                              ^
+       98 |     await page.getByRole('button',{name:/^回收站/}).click(); await page.locator('.note-card').click();
+       99 |     await page.getByRole('button',{name:'恢复笔记',exact:true}).click();
+      100 |     await expect(page.getByRole('button',{name:'取消收藏'})).toBeVisible();
+        at I:\软件工程\markdown-notes\tests\e2e\productivity.spec.ts:97:46
+
+    Error Context: test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\productivity-模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\productivity.spec.ts:40:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 ────────────────────────
+    tests\e2e\productivity.spec.ts:76:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 ───────────────────────────
+  1 passed (17.6s)

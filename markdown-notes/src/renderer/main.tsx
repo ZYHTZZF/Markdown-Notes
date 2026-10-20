@@ -45,10 +45,16 @@ import {
   PanelLeft,
   FileDown,
   PenLine,
+  Star,
+  Pin,
+  ListTree,
+  LayoutTemplate,
 } from 'lucide-react';
 import { codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
 import './style.css';
+import { outline } from '../shared/productivity';
+import { ReferenceSuggest, TemplateManager } from './productivity';
 import { version as APP_VERSION } from '../../package.json';
 import { usePaneLayout, PaneDivider } from './pane-layout';
 import { AppearanceSettings, applyAppearance } from './appearance';
@@ -175,13 +181,16 @@ function App() {
       .then(setAppearance)
       .catch(() => {});
   }, []);
+  const [outlineOpen, setOutlineOpen] = useState(false);
+  const [cursor, setCursor] = useState<{ text: string; caret: number } | null>(null);
+  const outlineButton = useRef<HTMLButtonElement>(null);
   const layout = usePaneLayout();
   const [status, setStatus] = useState<any>(null),
     [allTags, setAllTags] = useState<Tag[]>([]),
     [items, setItems] = useState<any[]>([]),
     [total, setTotal] = useState(0),
     [page, setPage] = useState(1),
-    [view, setView] = useState<'all' | 'trash'>('all'),
+    [view, setView] = useState<'all' | 'trash' | 'favorites'>('all'),
     [query, setQuery] = useState(''),
     [scope, setScope] = useState('all'),
     [filters, setFilters] = useState<string[]>([]),
@@ -247,6 +256,7 @@ function App() {
   }, []);
   const installNote = useCallback((n: NoteView | null) => {
     setNote(n);
+    setCursor(null);
     if (n)
       setDraft({
         note_id: n.note_id,
@@ -257,6 +267,7 @@ function App() {
         dirty: false,
       });
     else {
+      setOutlineOpen(false);
       setDraft(null);
       setReferencesOpen(false);
     }
@@ -444,13 +455,19 @@ function App() {
             searching ? 'search.query' : 'note.list',
             searching
               ? {
+                  favorites_only: view === 'favorites',
                   keyword: query,
                   scope,
                   tag_ids: filters,
                   page,
                   ...(page > 1 && queryToken.current ? { query_token: queryToken.current } : {}),
                 }
-              : { trash: view === 'trash', tag_ids: view === 'trash' ? [] : filters, page },
+              : {
+                  favorites_only: view === 'favorites',
+                  trash: view === 'trash',
+                  tag_ids: view === 'trash' ? [] : filters,
+                  page,
+                },
           );
           if (disposed) return;
           if (data.query_token) queryToken.current = data.query_token;
@@ -525,6 +542,80 @@ function App() {
     setDraft({ ...old, content: value, sequence: old.sequence + 1, dirty: true });
     setSaveState('dirty');
   };
+  const headings = useMemo(() => outline(content), [content]);
+  useEffect(() => {
+    if (!outlineOpen || modal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        e.preventDefault();
+        setOutlineOpen(false);
+        outlineButton.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [outlineOpen, modal]);
+  const goHeading = (index: number) => {
+    const h = headings[index];
+    if (!h) return;
+    if (mode === 'live') liveEditor.current?.reveal(h.offset);
+    else if (mode === 'read')
+      document
+        .querySelectorAll(
+          '.preview-pane .markdown h1,.preview-pane .markdown h2,.preview-pane .markdown h3,.preview-pane .markdown h4,.preview-pane .markdown h5,.preview-pane .markdown h6',
+        )
+        [index]?.scrollIntoView({ block: 'start' });
+    else if (editor.current) {
+      const t = editor.current;
+      t.focus();
+      const offset = content.slice(0, h.offset).replace(/\r\n/g, '\n').length;
+      t.setSelectionRange(offset, offset);
+      t.scrollTop =
+        content.slice(0, h.offset).split('\n').length * parseFloat(getComputedStyle(t).lineHeight) -
+        t.clientHeight / 3;
+      if (mode === 'split')
+        document
+          .querySelectorAll(
+            '.preview-pane .markdown h1,.preview-pane .markdown h2,.preview-pane .markdown h3,.preview-pane .markdown h4,.preview-pane .markdown h5,.preview-pane .markdown h6',
+          )
+          [index]?.scrollIntoView({ block: 'start' });
+    }
+  };
+  const pickReference = (start: number, end: number, title: string) => {
+    if (!cursor || draftRef.current?.content !== cursor.text) return;
+    const replacement = `[[${title}]]`;
+    if (mode === 'live') liveEditor.current?.replace(start, end, replacement);
+    else {
+      edit(cursor.text.slice(0, start) + replacement + cursor.text.slice(end));
+      setTimeout(() => {
+        editor.current?.focus();
+        editor.current?.setSelectionRange(start + replacement.length, start + replacement.length);
+      }, 0);
+    }
+    setCursor(null);
+  };
+  const flag = (field: 'favorites' | 'pinned') =>
+    void act('更新笔记标记', async () => {
+      const result = await api.call('note.flag', {
+        note_id: note!.note_id,
+        expected_revision: draftRef.current!.revision,
+        flag: field,
+        value: !(field === 'favorites' ? note!.favorite : note!.pinned),
+      });
+      installNote(result.note);
+      setRefresh((n) => n + 1);
+    });
+  const fromTemplate = async (id: string) => {
+    await flush();
+    const result = await api.call('note.create', { template_id: id });
+    installNote(result.note);
+    setView('all');
+    setFilters([]);
+    setQuery('');
+    setPage(1);
+    setModal(null);
+    setRefresh((n) => n + 1);
+  };
   const toggleTag = (tag_id: string) => {
     const d = draftRef.current;
     if (!d) return;
@@ -539,7 +630,7 @@ function App() {
     setDraft({ ...d, tag_ids: ids, sequence: d.sequence + 1, dirty: true });
     setSaveState('dirty');
   };
-  const switchView = (next: 'all' | 'trash') =>
+  const switchView = (next: 'all' | 'trash' | 'favorites') =>
     void act('切换视图', async () => {
       if (layout.hidden.list) layout.toggle('list');
       setView(next);
@@ -748,6 +839,21 @@ function App() {
             <Trash2 size={17} />
             回收站<span>{status?.stats?.trash ?? 0}</span>
           </button>
+          <button
+            className={'nav ' + (view === 'favorites' ? 'active' : '')}
+            onClick={() => switchView('favorites')}
+          >
+            <Star size={17} />
+            收藏笔记
+          </button>
+          <button
+            className="nav"
+            onClick={() => setModal({ type: 'templates' })}
+            disabled={!!busy || !status || !!status?.fault}
+          >
+            <LayoutTemplate size={17} />
+            笔记模板
+          </button>
           <div className="section-label">
             标签分类
             <button
@@ -848,9 +954,11 @@ function App() {
                         ? '搜索结果'
                         : view === 'trash'
                           ? '回收站'
-                          : filters.length
-                            ? '标签筛选'
-                            : '全部笔记'}
+                          : view === 'favorites'
+                            ? '收藏笔记'
+                            : filters.length
+                              ? '标签筛选'
+                              : '全部笔记'}
                     </h1>
                     <p>{total} 篇笔记</p>
                   </div>
@@ -881,7 +989,13 @@ function App() {
                   </div>
                 )}
                 <div className="list-sort">
-                  <span>{query ? '按匹配字段与更新时间' : '最近更新'}</span>
+                  <span>
+                    {query
+                      ? '按匹配字段与更新时间'
+                      : view === 'trash'
+                        ? '最近更新'
+                        : '置顶优先 · 最近更新'}
+                  </span>
                   <ChevronDown size={13} />
                 </div>
                 <div className="notes-scroll">
@@ -899,7 +1013,14 @@ function App() {
                         onClick={() => void select(n.note_id)}
                       >
                         <div className="note-card-title">
-                          <FileText size={15} />
+                          {n.pinned ? (
+                            <Pin size={15} className="favorite-indicator" aria-label="已置顶" />
+                          ) : (
+                            <FileText size={15} />
+                          )}
+                          {n.favorite && (
+                            <Star size={13} className="favorite-indicator" aria-label="已收藏" />
+                          )}
                           <strong>
                             <Highlight text={n.title} query={query} />
                           </strong>
@@ -974,6 +1095,38 @@ function App() {
                   <div className="document-actions">
                     {!note.deleted_at ? (
                       <>
+                        <button
+                          className={'icon ' + (note.favorite ? 'flag-active' : '')}
+                          aria-label={note.favorite ? '取消收藏' : '收藏笔记'}
+                          title={note.favorite ? '取消收藏' : '收藏笔记'}
+                          aria-pressed={note.favorite}
+                          disabled={!!busy}
+                          onClick={() => flag('favorites')}
+                        >
+                          <Star size={16} />
+                        </button>
+                        <button
+                          className={'icon ' + (note.pinned ? 'flag-active' : '')}
+                          aria-label={note.pinned ? '取消置顶' : '置顶笔记'}
+                          title={note.pinned ? '取消置顶' : '置顶笔记'}
+                          aria-pressed={note.pinned}
+                          disabled={!!busy}
+                          onClick={() => flag('pinned')}
+                        >
+                          <Pin size={16} />
+                        </button>
+                        <button
+                          className="icon"
+                          aria-label="保存为模板"
+                          title="保存为模板"
+                          disabled={!!busy}
+                          onClick={() => {
+                            setInput(note.title);
+                            setModal({ type: 'saveTemplate' });
+                          }}
+                        >
+                          <LayoutTemplate size={16} />
+                        </button>
                         <button
                           className="icon"
                           title="重命名笔记"
@@ -1123,12 +1276,29 @@ function App() {
                     ))}
                   </div>
                   <button
+                    ref={outlineButton}
+                    className={'references-toggle ' + (outlineOpen ? 'selected' : '')}
+                    aria-label="查看目录大纲"
+                    aria-expanded={outlineOpen}
+                    onClick={() => {
+                      setOutlineOpen((v) => !v);
+                      setReferencesOpen(false);
+                    }}
+                  >
+                    <ListTree size={15} />
+                    <span>大纲</span>
+                    <small>{headings.length}</small>
+                  </button>
+                  <button
                     ref={referencesButton}
                     className={'references-toggle ' + (referencesOpen ? 'selected' : '')}
                     aria-label="查看引用关系"
                     aria-expanded={referencesOpen}
                     aria-controls="reference-drawer"
-                    onClick={() => (referencesOpen ? closeReferences() : setReferencesOpen(true))}
+                    onClick={() => {
+                      setOutlineOpen(false);
+                      referencesOpen ? closeReferences() : setReferencesOpen(true);
+                    }}
                   >
                     <Link2 size={15} />
                     <span>引用</span>
@@ -1141,6 +1311,48 @@ function App() {
                   className={'editor-area ' + mode}
                   style={{ '--editor-font': font + 'px' } as React.CSSProperties}
                 >
+                  {outlineOpen && (
+                    <aside className="reference-panel" aria-label="目录大纲">
+                      <div className="reference-heading">
+                        <div>
+                          <h2>目录大纲</h2>
+                          <p>{headings.length} 个标题 · 点击跳转</p>
+                        </div>
+                        <button
+                          className="icon"
+                          aria-label="关闭目录大纲"
+                          onClick={() => {
+                            setOutlineOpen(false);
+                            outlineButton.current?.focus();
+                          }}
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                      <div className="outline-list">
+                        {headings.length ? (
+                          headings.map((h, i) => (
+                            <button
+                              key={h.offset}
+                              style={{ paddingLeft: 10 + (h.level - 1) * 12 }}
+                              onClick={() => goHeading(i)}
+                            >
+                              <small>H{h.level}</small>
+                              {h.text}
+                            </button>
+                          ))
+                        ) : (
+                          <p className="muted">写下 Markdown 标题后，大纲会显示在这里。</p>
+                        )}
+                      </div>
+                    </aside>
+                  )}
+
+                  <ReferenceSuggest
+                    cursor={cursor}
+                    onPick={pickReference}
+                    disabled={!!note.deleted_at || !!busy || !!modal || mode === 'read'}
+                  />
                   {mode === 'live' && (
                     <>
                       <div className="live-editor-hint">
@@ -1154,6 +1366,8 @@ function App() {
                           value={content}
                           readOnly={!!note.deleted_at || !!busy}
                           onChange={edit}
+                          onCursor={(text, caret) => setCursor({ text, caret })}
+                          onBlur={() => setCursor(null)}
                           onLink={(kind, target) => {
                             if (kind === 'note') jump(target);
                             else
@@ -1175,7 +1389,17 @@ function App() {
                         spellCheck={false}
                         aria-label="Markdown编辑器"
                         placeholder="从一个想法开始…\n\n输入 [[笔记名称]]，把知识连接起来。"
-                        onChange={(e) => edit(e.target.value)}
+                        onChange={(e) => {
+                          edit(e.target.value);
+                          setCursor({ text: e.target.value, caret: e.target.selectionStart });
+                        }}
+                        onSelect={(e) =>
+                          setCursor({
+                            text: e.currentTarget.value,
+                            caret: e.currentTarget.selectionStart,
+                          })
+                        }
+                        onBlur={() => setCursor(null)}
                         onKeyDown={(e) => {
                           if (e.key === 'Tab') {
                             e.preventDefault();
@@ -1405,11 +1629,50 @@ function App() {
               settings: '知识库设置',
               restore: '恢复预检',
               pdfExport: '导出PDF',
+              templates: '笔记模板',
+              saveTemplate: '保存为模板',
             }[modal.type] ?? '设置'
           }
           onClose={closeModal}
-          wide={modal.type === 'settings' || modal.type === 'restore'}
+          wide={['settings', 'restore', 'templates'].includes(modal.type)}
         >
+          {modal.type === 'templates' && (
+            <TemplateManager onCreate={fromTemplate} onError={(message) => notify(message, true)} />
+          )}
+          {modal.type === 'saveTemplate' && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void act('保存模板', async () => {
+                  await api.call('template.save', {
+                    title: input,
+                    content: draftRef.current!.content,
+                  });
+                  setModal(null);
+                  notify('已保存为自定义模板');
+                });
+              }}
+            >
+              <label className="field-label">模板名称</label>
+              <input
+                className="field"
+                aria-label="模板名称"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <p className="form-hint">
+                保存当前正文，不包含标签、收藏和置顶。每个模板最多64 KiB，最多50个自定义模板。
+              </p>
+              <div className="modal-actions">
+                <button className="button" type="button" onClick={closeModal}>
+                  取消
+                </button>
+                <button className="new-button" disabled={!!busy}>
+                  保存模板
+                </button>
+              </div>
+            </form>
+          )}
           {modal.type === 'rename' && (
             <form onSubmit={renameSubmit}>
               <label className="field-label">笔记标题</label>
@@ -1829,7 +2092,9 @@ function App() {
                   <p>
                     “正文已保存”与“索引可用”分别显示。磁盘写入失败时请保留编辑窗口并重试；不要直接修改内部数据库文件。
                   </p>
-                  <p className="muted">知页 {APP_VERSION} · 本地优先 · 首发备份格式1</p>
+                  <p className="muted">
+                    知页 {APP_VERSION} · 本地优先 · 备份格式2（兼容读取格式1）
+                  </p>
                 </div>
               )}
             </>

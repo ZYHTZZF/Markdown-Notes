@@ -360,6 +360,7 @@ if (parentPort && workerData?.kind === 'index') {
       options = {
         keyword: keyword(p.keyword ?? ''),
         scope: p.scope ?? 'all',
+        favorite_ids: p.favorite_ids,
         tag_ids: p.tag_ids ?? [],
         version: v,
       };
@@ -371,11 +372,15 @@ if (parentPort && workerData?.kind === 'index') {
       scope = options.scope,
       tagIds = options.tag_ids as string[];
     const page = Math.max(1, Number(p.page) || 1),
-      cacheKey = JSON.stringify({ v, q, scope, tagIds, page });
+      cacheKey = JSON.stringify({ v, q, scope, tagIds, page, favorites: options.favorite_ids });
     const cached = pageCache.get(cacheKey);
     if (cached) return { ...cached, query_token: token };
     const params: Record<string, any> = {},
       where: string[] = [];
+    if (options.favorite_ids) {
+      params.$favorites = JSON.stringify(options.favorite_ids);
+      where.push('d.note_id IN(SELECT value FROM json_each($favorites))');
+    }
     const title = 'instr(d.title_key,$q)>0',
       tag =
         'd.note_id IN(SELECT dt.note_id FROM doc_tags dt WHERE dt.tag_id IN(SELECT tag_id FROM tag_catalog WHERE instr(search_key,$q)>0))';

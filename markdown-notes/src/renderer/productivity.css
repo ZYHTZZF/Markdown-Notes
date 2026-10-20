@@ -1,0 +1,149 @@
+.reference-suggest {
+  position: absolute;
+  z-index: 35;
+  top: 32px;
+  left: 12px;
+  width: min(340px, calc(100% - 24px));
+  max-height: 300px;
+  overflow: auto;
+  background: var(--surface, #fff);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 10px 35px #0002;
+  padding: 6px;
+}
+.suggest-hint {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 8px;
+}
+.reference-suggest button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 9px 12px;
+  border-radius: 7px;
+  overflow-wrap: anywhere;
+}
+.reference-suggest button.selected {
+  color: var(--accent, #0066cc);
+  background: var(--selection);
+}
+.outline-list {
+  padding: 10px;
+  overflow: auto;
+  flex: 1;
+}
+.outline-list button {
+  display: block;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  border-radius: 7px;
+  padding: 10px;
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+.outline-list button:hover,
+.outline-list button:focus-visible {
+  background: var(--selection);
+  color: var(--accent, #0066cc);
+}
+.outline-list small {
+  color: #636366;
+  margin-right: 6px;
+  font-size: 12px;
+}
+.template-manager {
+  padding: 0 24px 24px;
+}
+.template-grid {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 18px;
+  height: 390px;
+}
+.template-list {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.template-list .button {
+  flex-shrink: 0;
+  justify-content: space-between;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.template-list small {
+  color: #636366;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.template-list .selected {
+  background: var(--selection);
+  color: var(--accent, #0066cc);
+}
+.template-detail {
+  overflow: auto;
+  min-width: 0;
+}
+.template-detail label {
+  display: block;
+  margin-bottom: 12px;
+}
+.template-detail input,
+.template-detail textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #d8d8dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d1d1f;
+}
+.template-detail textarea {
+  height: 230px;
+  resize: vertical;
+}
+.template-preview {
+  height: 260px;
+  overflow: auto;
+  font-size: 14px;
+}
+.template-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+}
+.favorite-indicator {
+  color: var(--accent, #0066cc);
+  flex-shrink: 0;
+}
+.icon.flag-active {
+  background: var(--selection);
+  color: var(--accent, #0066cc);
+}
+.editor-toolbar .references-toggle {
+  flex-shrink: 0;
+}
+.editor-area {
+  position: relative;
+}
+@media (max-width: 1150px) {
+  .editor-toolbar {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .format-tools {
+    gap: 0;
+  }
+  .template-grid {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+}

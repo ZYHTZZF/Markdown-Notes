@@ -57,6 +57,47 @@ try {
   await page.waitForFunction(() =>
     document.querySelector('.save-status')?.textContent?.includes('已保存'),
   );
+  await page.getByRole('button', { name: '查看目录大纲' }).click();
+  await page
+    .getByRole('complementary', { name: '目录大纲' })
+    .getByRole('button', { name: /H2.*成品即时编辑/ })
+    .click();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '收藏笔记', exact: true }).last().click();
+  await page.getByRole('button', { name: '置顶笔记', exact: true }).click();
+  await page.getByRole('button', { name: '保存为模板', exact: true }).click();
+  await page.getByRole('textbox', { name: '模板名称' }).fill('成品验证模板');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await page.getByRole('button', { name: '笔记模板', exact: true }).click();
+  await page.getByRole('button', { name: /成品验证模板.*自定义/ }).click();
+  await page.getByRole('button', { name: '用此模板新建' }).click();
+  await page.getByRole('button', { name: '分屏', exact: true }).click();
+  const source = page.getByRole('textbox', { name: 'Markdown编辑器' });
+  await source.fill('[[成品验证模');
+  await page.getByRole('option', { name: '成品验证模板', exact: true }).click();
+  assert.equal(await source.inputValue(), '[[成品验证模板]]');
+  await page.keyboard.press('Control+s');
+  await page.waitForFunction(() =>
+    document.querySelector('.save-status')?.textContent?.includes('已保存'),
+  );
+  await page.getByRole('button', { name: '收藏笔记', exact: true }).first().click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector('.list-heading h1')?.textContent === '收藏笔记' &&
+      document.querySelectorAll('.note-card').length === 1,
+  );
+  assert.equal(await page.locator('.note-card').count(), 1);
+  await page.locator('.note-card').click();
+  await page.getByRole('button', { name: '取消置顶' }).waitFor();
+  await app.evaluate(
+    ({ dialog }, path) => {
+      dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] });
+    },
+    join(root, 'backups'),
+  );
+  const backupRecord = await page.evaluate(() => window.notesApi.call('backup.create'));
+  assert.equal(backupRecord.format_version, 2);
+  assert(readFileSync(backupRecord.file_path).length > 0);
   const runtime = await app.evaluate(({ app }) => ({
     packaged: app.isPackaged,
     version: app.getVersion(),
@@ -81,6 +122,8 @@ try {
       '成品离线数学公式预览与真实PDF导出',
       '成品主色与纯色背景设置、带背景导出选项',
       '成品即时编辑与Markdown标题转换',
+      '成品目录大纲、引用自动补全、自定义模板复用、收藏与置顶',
+      '成品格式2完整备份生成',
       '实际打包标志与版本',
     ],
   };

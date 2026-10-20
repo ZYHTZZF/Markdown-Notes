@@ -1,0 +1,66 @@
+
+Running 18 tests using 1 worker
+
+  ok  1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (7.1s)
+  ok  2 tests\e2e\app.spec.ts:105:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.2s)
+  ok  3 tests\e2e\app.spec.ts:134:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.4s)
+  ok  4 tests\e2e\appearance.spec.ts:6:5 › 自定义颜色与图片背景：本机记忆、独立副本、带背景／无背景PDF、恢复默认 (5.4s)
+  ok  5 tests\e2e\appearance.spec.ts:121:5 › 无效图片、伪造路径与损坏设置：拒绝非法输入，保留原设置并回退默认 (1.7s)
+  ok  6 tests\e2e\live-editor.spec.ts:17:5 › 即时编辑：##空格生成二级标题、列表、粗体、撤销与源码往返 (2.0s)
+  ok  7 tests\e2e\live-editor.spec.ts:74:5 › 原文保留、公式表格、中文组合输入、模式记忆与关闭前保存 (3.2s)
+  ok  8 tests\e2e\live-editor.spec.ts:140:5 › 即时模式小窗口、原文粘贴、安全显示与回收站只读 (1.9s)
+  ok  9 tests\e2e\math-pdf.spec.ts:13:5 › 离线公式预览与真实PDF：中文、四种定界符、矩阵、长文分页、安全隔离和取消 (2.8s)
+  ok 10 tests\e2e\math-pdf.spec.ts:112:5 › 错误公式与恶意命令不执行；打印失败保留旧PDF、清理隐藏窗口并允许重试 (2.9s)
+  ok 11 tests\e2e\productivity.spec.ts:19:5 › 大纲：源码/阅读/即时跳转，重复标题与小窗口布局 (2.0s)
+  ok 12 tests\e2e\productivity.spec.ts:58:5 › 引用补全：源码与即时输入、特殊字符、Esc、键盘选择、中文组合输入 (2.7s)
+  ok 13 tests\e2e\productivity.spec.ts:111:5 › 模板、收藏、置顶：自定义复用、收藏搜索、回收恢复与重启持久化 (3.8s)
+  ok 14 tests\e2e\resizing.spec.ts:35:7 › 1480宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (27.0s)
+  x  15 tests\e2e\resizing.spec.ts:35:7 › 1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 (6.4s)
+  ok 16 tests\e2e\visual.spec.ts:101:7 › 清透界面1480×940：长内容、引用抽屉、搜索、设置与恢复布局 (6.9s)
+  ok 17 tests\e2e\visual.spec.ts:101:7 › 清透界面1080×700：长内容、引用抽屉、搜索、设置与恢复布局 (6.3s)
+  ok 18 tests\e2e\visual.spec.ts:247:5 › 窗口控制、减少动态效果、模式偏好及关闭前保存兼容 (2.4s)
+
+
+  1) tests\e2e\resizing.spec.ts:35:7 › 1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 ───────────────────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('separator', { name: '调整笔记列表宽度' })
+    Expected: "268"
+    Received: "232"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByRole('separator', { name: '调整笔记列表宽度' }) with timeout 5000ms
+      - waiting for getByRole('separator', { name: '调整笔记列表宽度' })
+        14 × locator resolved to <div tabindex="0" role="separator" aria-valuemin="220" aria-valuemax="288" aria-valuenow="232" aria-label="调整笔记列表宽度" aria-valuetext="232 像素" data-hide-label="松开隐藏笔记列表" aria-orientation="vertical" data-collapse-pending="false" aria-controls="note-list-pane" class="pane-divider list-divider" title="拖动调整宽度，继续向左拖可隐藏笔记列表；双击或回车恢复默认；方向键微调">…</div>
+           - unexpected value "232"
+
+
+      75 |       await expect(sidebar).toHaveAttribute('aria-valuenow', String(initial.sidebar + 40));
+      76 |       await drag(page, list, 36);
+    > 77 |       await expect(list).toHaveAttribute('aria-valuenow', String(initial.list + 36));
+         |                          ^
+      78 |       expect((await page.locator('.document').boundingBox())!.width).toBeCloseTo(before - 76, 0);
+      79 |       await expect(page.getByRole('textbox', { name: 'Markdown编辑器' })).toHaveValue(text);
+      80 |       await assertUsable(page);
+        at I:\软件工程\markdown-notes\tests\e2e\resizing.spec.ts:77:26
+
+    Error Context: test-results\playwright\resizing-1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\playwright\resizing-1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\playwright\resizing-1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\resizing.spec.ts:35:7 › 1080宽窗口：三栏拖动、收起展开、边界、取消、键盘及记忆 ────────────────────────────────
+  17 passed (1.7m)
+
+(node:15108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

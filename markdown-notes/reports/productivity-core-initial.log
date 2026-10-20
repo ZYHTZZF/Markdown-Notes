@@ -1,0 +1,109 @@
+
+> markdown-notes@1.4.0 test
+> tsx --test tests/*.test.ts
+
+✔ 任意主色生成可读的按钮与链接，包括极浅、极深和灰色 (5.3081ms)
+✔ 外观输入只接受受限颜色、背景类别与强度，不接收任意路径或CSS (1.9598ms)
+(node:27772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 100,000条引用边界：新建、恢复和重命名激活超限均整笔拒绝 (1712.0995ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 名称：NFC、ASCII大小写、码点长度、控制字符与全角区别 (1.7279ms)
+✔ 解析：排除三类代码、奇偶转义、嵌套、相邻与字面特殊字符 (4.5732ms)
+✔ 渲染：HTML不执行、远程图片不加载，双向引用与任务列表可用 (5.303ms)
+✔ 持久化、默认标题、重复标题、revision与请求幂等 (109.0316ms)
+✔ 原子重命名包含自引用，回收站、代码和转义原文不变 (110.2929ms)
+✔ 重命名执行中失败与联动超限均整体回滚 (144.1829ms)
+✔ 全局删除标签包括回收站关联，同名新标签不重新关联 (108.6463ms)
+✔ 21个标签拒绝，不会提交部分关联 (151.1771ms)
+✔ 备份流式格式：原字节摘要、业务字段与导出元数据差异 (169.7515ms)
+✔ 损坏ZIP、摘要不一致、额外条目均拒绝且不改变原库 (64.396ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 单资料库排他锁与未知格式保护 (502.2561ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 搜索、字面匹配、标签交集、分页作废与双向引用 (500.056ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 重建期间编辑、删除、标签变更和同名激活均进入新版本 (1456.364ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 正常恢复有保护备份，新epoch拒绝旧保存，保留本机历史 (714.1956ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 主库损坏时故障恢复不依赖旧库有效备份，原文件逐字节保留 (1016.2132ms)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 恢复暂存失败不会切换活动库或改变原始正文 (597.0202ms)
+(node:30268) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 四种公式定界符，转义、金额和未完成输入 (1.87ms)
+✔ 公式、代码和转义不产生引用，重命名只改真实引用 (13.5126ms)
+✔ 分式、积分、矩阵、对齐和中文公式；代码与多行块保持结构 (10.0965ms)
+✔ 错误公式安全回退，限制宏展开与不可信HTML命令 (3.0438ms)
+✔ 旧版派生引用目录原子刷新，记录全部笔记供索引追赶，正文与修订号不变 (130.5958ms)
+(node:52804) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 大纲按源文位置处理ATX/Setext、重复标题、CRLF，排除代码与公式 (4.362ms)
+✔ 补全复用引用语义：特殊字符、转义、代码、公式与已有闭括号 (3.3065ms)
+✔ 收藏置顶排序、幂等、回收恢复保留、永久删除清理及失败回滚 (128.4714ms)
+✔ 模板新建为原子操作、同名自动编号、独立副本、限制与回滚 (94.5009ms)
+✔ 格式2完整备份保留收藏、置顶、自定义模板，新库导入后可继续使用 (224.7633ms)
+✖ 服务补全排除回收站、规范化字面查询；收藏搜索分页与恢复一致 (164.224ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 备份拒绝重复字段、额外条目、符号链接与未知格式 (206.8315ms)
+✔ 备份拒绝错误顶层类型、无效外键、伪造摘要、非法UTF-8 (158.0889ms)
+✔ 正文容量在流式解析时拒绝超限 (182.7088ms)
+✔ 组合字符和emoji高亮映回完整原字符区间 (10.0189ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 同名新建重新绑定，恢复改名不猜测历史自引用 (463.2179ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 120条结果翻页50/50/20且无重复 (1764.4102ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 正常恢复保护备份失败／切换前失败保持旧库完整 (724.2844ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 控制库损坏恢复保留原控制材料及原业务文件 (686.3883ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 禁止导出覆盖内部数据库，未知IPC字段被拒绝 (490.9194ms)
+(node:59964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 已提交正文在强制结束真实进程后仍可读取（不是断电验证） (586.5682ms)
+✔ 旧格式1可读取，格式1不得混入新版元数据 (116.8965ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 40
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6066.1684
+
+✖ failing tests:
+
+test at tests\productivity.test.ts:157:1
+✖ 服务补全排除回收站、规范化字面查询；收藏搜索分页与恢复一致 (164.224ms)
+  TypeError: Cannot read properties of undefined (reading 'note_id')
+      at TestContext.<anonymous> (I:\软件工程\markdown-notes\tests\productivity.test.ts:164:81)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-20T12:10:46.501Z",
-  "version": "1.4.0",
+  "date": "2026-10-20T12:37:02.942Z",
+  "version": "1.5.0",
   "baseline": [
     {
       "path": "需求分析文档/01-需求分析文档.md",
@@ -14,19 +14,19 @@
   "compiled_files": [
     {
       "path": "dist/backend.cjs",
-      "sha256": "aa035f0aee90f58c291e274b18e7d535a079163b70d613977ae7d305899092b5"
+      "sha256": "e80c6e6bcc5fe772e366c166d28381c8a3f8ea4cbbbed01442ac4beac8873497"
     },
     {
       "path": "dist/backend.cjs.map",
-      "sha256": "712d799467023a0f0c857d691ee202d6d8209cb837a9009bd8a6450bc6f88b23"
+      "sha256": "40d850b0a4ee7fe47fd40e1ec3e0ee36a6e7a76072764fbbcf8aaffde0a0d208"
     },
     {
       "path": "dist/indexer.cjs",
-      "sha256": "3d5b5382727548236caf24d969a93ce184798dae601b609165bf88980067cde4"
+      "sha256": "4be822d533ebc0e9f474932f416727f0864e67f8c7e15d865da13d285ab0627b"
     },
     {
       "path": "dist/indexer.cjs.map",
-      "sha256": "1f384d05a41dc3d8d2911d65747957e368ceec81e62839f1e40c5475fc32e58a"
+      "sha256": "f1d7fb0b8615e1dd9975dab2f0736e21c2a752a6fb9e2fee3ee8e15b4f5ff3ba"
     },
     {
       "path": "dist/main.cjs",
@@ -38,11 +38,11 @@
     },
     {
       "path": "dist/preload.cjs",
-      "sha256": "0ab138d4670c1ec937b54ca46bc58499fa2a1151e3c0891463af535eb72c81e6"
+      "sha256": "fbf26c1d11872659ce673a0fb0347bb2cf0c5cba831240bb2788e94e0aa73795"
     },
     {
       "path": "dist/preload.cjs.map",
-      "sha256": "45bd9b45015fc637b2f243dd3d5d47228d248910e8c38809b8b669766022cd01"
+      "sha256": "808da54f271f289339d37cd399ae8b3018a6c2ea4bc073936c27a05fa48d48d1"
     },
     {
       "path": "dist/print-preload.cjs",
@@ -289,32 +289,32 @@
       "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa"
     },
     {
-      "path": "dist/renderer/assets/appearance-CCvpg70I.js",
-      "sha256": "a54fedd6126d343b4b0a0d82e2f921642606979d7709319f44155cb9efd9db64"
+      "path": "dist/renderer/assets/appearance-Vk4NNON_.js",
+      "sha256": "07f0fac002c5fbd96b671eeb37810b4377d126252a9b2fcd6a4b789f9d58f624"
     },
     {
       "path": "dist/renderer/assets/appearance-tUqyOkrX.css",
       "sha256": "e7ae48b9df8d0c28aeab05502bc2ec10c1e36f5abb434f71b87e332b158eb7cb"
     },
     {
-      "path": "dist/renderer/assets/index-DUQaibsR.css",
-      "sha256": "9d12981f1d5d0839944a7e2c32a730c74985af9ff235574e2481663932629889"
+      "path": "dist/renderer/assets/index-C3YZFRZx.css",
+      "sha256": "bee995d1f40b6ceb4679aa1fa18c26f7c9caf977f2bcc5e52a18f30e0b55d0c2"
     },
     {
-      "path": "dist/renderer/assets/index-bmTJT6gp.js",
-      "sha256": "467bbf6304871d1447d9d4c35c7545a83082d0892e5b8737253d9dc00d3d375b"
+      "path": "dist/renderer/assets/index-CTtUDBSR.js",
+      "sha256": "8a388f548d415d87d6c7edc6d778f643aec4b1961438c3d28e380b6529938bf6"
     },
     {
-      "path": "dist/renderer/assets/live-editor-DjX0mH2S.js",
-      "sha256": "4889c046a340edd965dcd9c7ad447af742f826227d3c21c7d71a3c2e15b23a0e"
+      "path": "dist/renderer/assets/live-editor-B73zqkBo.js",
+      "sha256": "3227e5f72d8169fba1298004eeb65c5ba59b7d5ec67b1aae57984b52ae27c0f7"
     },
     {
       "path": "dist/renderer/assets/live-editor-DvFXN6g4.css",
       "sha256": "2117c94ab616ee682525f6fe6a860c60c3d3b1dfc924e18de6c42b4aeb3a2a06"
     },
     {
-      "path": "dist/renderer/assets/print-COCFaR4t.js",
-      "sha256": "3afa6f016e67aa16e66216e55809b335acfdb9c7fa0c0499d50e8e6fcc95576f"
+      "path": "dist/renderer/assets/print-DO-XxSuu.js",
+      "sha256": "97a900d02eb8e9a54e1880caec57c65f91dbd487e1572d20b6a603380bc43dea"
     },
     {
       "path": "dist/renderer/assets/print-D_ViP0wm.css",
@@ -322,21 +322,21 @@
     },
     {
       "path": "dist/renderer/index.html",
-      "sha256": "27443d2c9b6217b2e79aece004a479ac7e03945b2146567a59874b0fa56876b9"
+      "sha256": "f1624f258b7b18c64de73143ca6f2d6bf63b2135207bdb814e75440f59309e6b"
     },
     {
       "path": "dist/renderer/print.html",
-      "sha256": "e09b31ef24b8f3f46111b754ebd8cedfb7af30baf90d311438d7aac4dd35a2cb"
+      "sha256": "777e81ee76100b3053efec4a60b240941e18d0452bde8249f418465d03f4f8a0"
     }
   ],
   "packaged": {
-    "date": "2026-10-20T12:10:25.519Z",
+    "date": "2026-10-20T12:35:50.333Z",
     "pass": true,
     "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
     "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
     "runtime": {
       "packaged": true,
-      "version": "1.4.0",
+      "version": "1.5.0",
       "electron": "44.9.1",
       "node": "24.22.0"
     },
@@ -348,6 +348,8 @@
       "成品离线数学公式预览与真实PDF导出",
       "成品主色与纯色背景设置、带背景导出选项",
       "成品即时编辑与Markdown标题转换",
+      "成品目录大纲、引用自动补全、自定义模板复用、收藏与置顶",
+      "成品格式2完整备份生成",
       "实际打包标志与版本"
     ]
   }

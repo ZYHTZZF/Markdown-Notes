@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('notesApi', {
       result.data?.business_version &&
       [
         'note.create',
+        'note.flag',
+        'template.save',
+        'template.delete',
         'note.save',
         'note.setTags',
         'note.rename',

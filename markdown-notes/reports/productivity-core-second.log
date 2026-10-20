@@ -1,0 +1,18 @@
+(node:67520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 大纲按源文位置处理ATX/Setext、重复标题、CRLF，排除代码与公式 (3.9069ms)
+✔ 补全复用引用语义：特殊字符、转义、代码、公式与已有闭括号 (1.1707ms)
+✔ 收藏置顶排序、幂等、回收恢复保留、永久删除清理及失败回滚 (76.1607ms)
+✔ 模板新建为原子操作、同名自动编号、独立副本、限制与回滚 (66.1524ms)
+✔ 格式2完整备份保留收藏、置顶、自定义模板，新库导入后可继续使用 (149.1516ms)
+(node:67520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 服务补全排除回收站、规范化字面查询；收藏搜索分页与恢复一致 (272.0624ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 910.6688

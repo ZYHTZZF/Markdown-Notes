@@ -1,18 +1,17 @@
 {
+  "date": "2026-10-20T12:36:21.690307+00:00",
+  "version": "1.5.0",
+  "file": "reports\\成品中文与公式验证.pdf",
   "pages": 1,
   "chinese_body": true,
   "chinese_math": true,
   "no_replacement": true,
+  "all_fonts_embedded": true,
   "fonts": [
     "AAAAAA+MicrosoftYaHei-Bold",
     "BAAAAA+MicrosoftYaHei",
     "CAAAAA+KaTeX_Math-Italic",
     "DAAAAA+KaTeX_Main-Regular"
-  ],
-  "background_sample_rgb": [
-    254,
-    254,
-    254
   ],
   "pass": true
 }

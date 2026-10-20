@@ -40,7 +40,9 @@ test('100,000条引用边界：新建、恢复和重命名激活超限均整笔�
   };
   store.import(snapshot);
   assert.equal(store.linkCount(), 100000);
+  const template = store.mutate('template.save', { title: 'X', content: '[[T0]]' }, randomUUID());
   for (const [method, payload] of [
+    ['note.create', { template_id: template.template_id }],
     ['note.create', { title: 'X' }],
     ['trash.restore', { note_id: trash.note_id, expected_revision: 0 }],
     ['note.rename', { note_id: targets[0].note_id, expected_revision: 0, title: 'X' }],

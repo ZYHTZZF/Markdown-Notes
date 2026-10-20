@@ -1,3 +1,4 @@
+import { BUILTIN_TEMPLATES } from '../shared/productivity';
 import { DatabaseSync } from 'node:sqlite';
 import { Worker } from 'node:worker_threads';
 import { randomUUID, createHash } from 'node:crypto';
@@ -19,7 +20,7 @@ import { z } from 'zod';
 import { Store } from './store';
 import { readBackup, writeBackup, exportNotes, digest, inside } from './archive';
 import { buildStandalone } from './indexer';
-import { fail, AppError, key, name, counts } from '../shared/rules';
+import { fail, AppError, key, name, counts, trim } from '../shared/rules';
 import type { IndexStatus, Rpc } from '../shared/types';
 
 const id = z.string().uuid(),
@@ -27,7 +28,23 @@ const id = z.string().uuid(),
   ids = z.array(id).max(20),
   empty = z.object({}).strict();
 const schemas: Record<string, z.ZodType<any>> = {
-  'note.create': z.object({ title: z.string().optional() }).strict(),
+  'note.create': z
+    .object({ title: z.string().optional(), template_id: z.string().max(100).optional() })
+    .strict(),
+  'note.flag': z
+    .object({
+      note_id: id,
+      expected_revision: revision,
+      flag: z.enum(['favorites', 'pinned']),
+      value: z.boolean(),
+    })
+    .strict(),
+  'template.list': empty,
+  'template.save': z
+    .object({ template_id: id.optional(), title: z.string(), content: z.string() })
+    .strict(),
+  'template.delete': z.object({ template_id: id }).strict(),
+  'note.suggest': z.object({ keyword: z.string().max(200) }).strict(),
   'note.save': z
     .object({
       note_id: id,
@@ -53,6 +70,7 @@ const schemas: Record<string, z.ZodType<any>> = {
   'note.get': z.object({ note_id: id, trash: z.boolean().optional() }).strict(),
   'note.list': z
     .object({
+      favorites_only: z.boolean().optional(),
       trash: z.boolean().optional(),
       tag_ids: ids.optional(),
       page: z.number().int().min(1).optional(),
@@ -60,6 +78,7 @@ const schemas: Record<string, z.ZodType<any>> = {
     .strict(),
   'search.query': z
     .object({
+      favorites_only: z.boolean().optional(),
       keyword: z.string().optional(),
       scope: z.enum(['all', 'title', 'content', 'tag']).optional(),
       tag_ids: ids.optional(),
@@ -529,10 +548,45 @@ export class Backend extends EventEmitter {
     if (method === 'restore.execute') return this.restore(p, request.request_id);
     if (!this.store || this.fault) fail('E_STORAGE', '主数据不可用，请执行故障恢复');
     if (method === 'note.get') return this.store.note(p.note_id, p.trash);
-    if (method === 'note.list') return this.store.list(p.trash, p.tag_ids, p.page);
+    if (method === 'note.list')
+      return this.store.list(p.trash, p.tag_ids, p.page, p.favorites_only);
+    if (method === 'template.list')
+      return [
+        ...BUILTIN_TEMPLATES.map((t) => ({ ...t, builtin: true })),
+        ...((this.store.profile().preferences.templates as any[]) ?? []),
+      ];
+    if (method === 'note.suggest') {
+      const q = key(trim(p.keyword));
+      return (
+        this.store.db
+          .prepare(
+            'SELECT note_id,title FROM notes WHERE deleted_at IS NULL ORDER BY title_key,note_id',
+          )
+          .all() as any[]
+      )
+        .filter((n) => key(n.title).includes(q))
+        .sort((a, b) => Number(!key(a.title).startsWith(q)) - Number(!key(b.title).startsWith(q)))
+        .slice(0, 20);
+    }
     if (method === 'tag.list') return this.store.tags();
     if (method === 'stats') return this.store.stats();
-    if (method === 'search.query') return this.indexCall('query', p);
+    if (method === 'search.query') {
+      const pref = this.store.profile().preferences;
+      const result = await this.indexCall('query', {
+        ...p,
+        ...(p.favorites_only ? { favorite_ids: pref.favorites ?? [] } : {}),
+      });
+      const favorite = new Set((pref.favorites as string[]) ?? []),
+        pinned = new Set((pref.pinned as string[]) ?? []);
+      return {
+        ...result,
+        items: result.items.map((n: any) => ({
+          ...n,
+          favorite: favorite.has(n.note_id),
+          pinned: pinned.has(n.note_id),
+        })),
+      };
+    }
     if (method === 'links') return this.indexCall('links', p);
     if (method === 'link.open') {
       if (this.index.state !== 'ready' || this.index.indexed_version !== this.store.version)
