@@ -1,0 +1,16 @@
+.markdown .katex {
+  text-indent: 0;
+}
+.markdown .katex .cjk_fallback {
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', 'SimSun', sans-serif;
+}
+.markdown .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2em 0;
+}
+.markdown .math-error {
+  color: #a22424;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

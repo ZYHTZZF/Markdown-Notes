@@ -1,0 +1,12 @@
+{
+  "pages": 1,
+  "chinese_body": true,
+  "chinese_math": true,
+  "no_replacement": true,
+  "fonts": [
+    "AAAAAA+MicrosoftYaHei-Bold",
+    "BAAAAA+MicrosoftYaHei",
+    "CAAAAA+KaTeX_Math-Italic",
+    "DAAAAA+KaTeX_Main-Regular"
+  ]
+}

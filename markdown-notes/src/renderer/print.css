@@ -1,0 +1,101 @@
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  background: white;
+  color: #1d1d1f;
+}
+body {
+  width: 178mm;
+  margin: 0 auto;
+  font:
+    11pt/1.75 'Microsoft YaHei',
+    'PingFang SC',
+    'Noto Sans CJK SC',
+    'SimSun',
+    sans-serif;
+  overflow-wrap: anywhere;
+}
+header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 7mm;
+  padding-bottom: 3mm;
+}
+header h1 {
+  font-size: 22pt;
+  margin: 0;
+  line-height: 1.5;
+}
+.markdown h1 {
+  font-size: 20pt;
+}
+.markdown h2 {
+  font-size: 17pt;
+}
+.markdown h3 {
+  font-size: 14pt;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  break-after: avoid;
+  line-height: 1.5;
+  margin: 1.2em 0 0.6em;
+}
+p {
+  orphans: 3;
+  widows: 3;
+}
+a {
+  color: #0056ad;
+  text-decoration: none;
+}
+blockquote {
+  border-left: 3px solid #aaa;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #444;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 3mm;
+  background: #f5f5f7;
+  border: 1px solid #ddd;
+}
+code {
+  font-family: Consolas, 'Microsoft YaHei', monospace;
+  font-size: 0.9em;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 10pt;
+}
+thead {
+  display: table-header-group;
+}
+th,
+td {
+  border: 1px solid #bbb;
+  padding: 2mm;
+}
+tr,
+.katex-display {
+  break-inside: avoid;
+}
+.markdown .katex-display {
+  overflow: visible;
+}
+.markdown .katex-display > .katex {
+  max-width: 100%;
+}
+.image-placeholder {
+  color: #636366;
+}

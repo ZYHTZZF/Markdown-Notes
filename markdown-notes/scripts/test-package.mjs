@@ -14,11 +14,24 @@ try {
   await page.getByRole('button', { name: '新建笔记', exact: true }).click();
   await page
     .getByRole('textbox', { name: 'Markdown编辑器' })
-    .fill('# Windows成品验证\n\n无需安装Node或数据库服务器，离线打开即可开始记录。');
+    .fill(
+      '# Windows成品验证\n\n中文学习笔记：离线公式与导出。\n\n行内 $E=mc^2$\n\n$$\\frac{1}{2}+\\sqrt{x}+\\text{中文说明}$$',
+    );
   await page.waitForFunction(() =>
     document.querySelector('.save-status')?.textContent?.includes('已保存'),
   );
   assert.equal(await page.locator('.markdown h1').textContent(), 'Windows成品验证');
+  assert.equal(await page.locator('.markdown .katex').count(), 2);
+  await page.evaluate(() => document.fonts.ready.then(() => true));
+  const pdf = resolve('reports/成品中文与公式验证.pdf');
+  await app.evaluate(({ dialog }, path) => {
+    dialog.showSaveDialog = async () => ({ canceled: false, filePath: path });
+  }, pdf);
+  await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+  await page.waitForFunction(() =>
+    document.querySelector('[role="status"]')?.textContent?.includes('PDF已导出'),
+  );
+  assert.equal(readFileSync(pdf).subarray(0, 5).toString(), '%PDF-');
   const runtime = await app.evaluate(({ app }) => ({
     packaged: app.isPackaged,
     version: app.getVersion(),
@@ -40,6 +53,7 @@ try {
       '新建与编辑',
       '安全Markdown预览',
       '自动持久化',
+      '成品离线数学公式预览与真实PDF导出',
       '实际打包标志与版本',
     ],
   };

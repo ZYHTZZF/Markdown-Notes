@@ -12,6 +12,7 @@ await build({
   entryPoints: {
     main: 'src/main.ts',
     preload: 'src/preload.ts',
+    'print-preload': 'src/print-preload.ts',
     backend: 'src/backend/worker.ts',
     indexer: 'src/backend/indexer.ts',
   },

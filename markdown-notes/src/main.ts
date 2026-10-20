@@ -5,6 +5,7 @@ import { join, resolve, sep, basename } from 'node:path';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { Rpc } from './shared/types';
+import { exportPdf, registerPdfExport } from './pdf-export';
 
 app.setName('知页');
 if (process.env.ZHIYE_DATA_DIR) {
@@ -86,6 +87,7 @@ if (gotLock)
   app.whenReady().then(async () => {
     const root = process.env.ZHIYE_DATA_DIR || join(app.getPath('userData'), 'library');
     mkdirSync(root, { recursive: true });
+    registerPdfExport();
     backend = new Worker(join(__dirname, 'backend.cjs'), {
       workerData: { root, indexWorker: join(__dirname, 'indexer.cjs') },
     });
@@ -128,15 +130,21 @@ if (gotLock)
         );
       if (!file.startsWith(dir + sep)) return new Response('', { status: 403 });
       try {
-        const type = file.endsWith('.js')
-          ? 'text/javascript'
-          : file.endsWith('.css')
-            ? 'text/css'
-            : file.endsWith('.svg')
-              ? 'image/svg+xml'
-              : file.endsWith('.png')
-                ? 'image/png'
-                : 'text/html';
+        const type = file.endsWith('.woff2')
+          ? 'font/woff2'
+          : file.endsWith('.woff')
+            ? 'font/woff'
+            : file.endsWith('.ttf')
+              ? 'font/ttf'
+              : file.endsWith('.js')
+                ? 'text/javascript'
+                : file.endsWith('.css')
+                  ? 'text/css'
+                  : file.endsWith('.svg')
+                    ? 'image/svg+xml'
+                    : file.endsWith('.png')
+                      ? 'image/png'
+                      : 'text/html';
         return new Response(readFileSync(file), {
           headers: {
             'content-type': type,
@@ -169,6 +177,38 @@ if (gotLock)
           }
           shell.showItemInFolder(path);
           return { ok: true, data: true };
+        }
+        if (method === 'export.pdf') {
+          const p = z.object({ note_id: z.string().uuid() }).strict().parse(payload);
+          const status = await system('system.status');
+          if (status.fault || status.exclusive || request.epoch !== status.epoch)
+            throw Object.assign(new Error('资料库状态已改变或正在恢复，请稍后重试'), {
+              code: 'E_BUSY',
+            });
+          const note = await system('note.get', p, status.epoch);
+          const owner = liveWindow();
+          if (!owner) throw new Error('窗口已关闭');
+          const chosen = await dialog.showSaveDialog(owner, {
+            title: '导出当前笔记为PDF',
+            defaultPath: join(
+              app.getPath('documents'),
+              safeName(note.title, note.note_id).replace(/\.md$/, '.pdf'),
+            ),
+            filters: [{ name: 'PDF文档', extensions: ['pdf'] }],
+            properties: ['showOverwriteConfirmation', 'createDirectory'],
+          });
+          if (chosen.canceled || !chosen.filePath)
+            return { ok: false, code: 'E_CANCELLED', message: '已取消导出' };
+          const current = await system('system.status');
+          if (current.epoch !== status.epoch || current.exclusive || current.fault)
+            throw Object.assign(new Error('资料库状态已改变，请重新导出'), { code: 'E_BUSY' });
+          return {
+            ok: true,
+            data: await exportPdf(owner, root, chosen.filePath, {
+              title: note.title,
+              content: note.content,
+            }),
+          };
         }
         if (method === 'backup.create') {
           if (Object.keys(payload).length) throw new Error('非法路径参数');

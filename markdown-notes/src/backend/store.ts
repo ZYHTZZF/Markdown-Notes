@@ -46,6 +46,30 @@ export class Store {
     if (!ok || Object.values(ok)[0] !== 'ok') fail('E_STORAGE', '主资料库完整性检查失败');
     const meta = this.db.prepare('SELECT * FROM meta WHERE id=1').get() as any;
     if (!meta || meta.schema_version !== 1) fail('E_VERSION', '不支持的资料库版本');
+    if (create) this.refreshReferenceRules();
+  }
+  /** Derived catalogue revision only; the source schema and backup format remain version 1. */
+  private refreshReferenceRules() {
+    const revision = (this.db.prepare('PRAGMA user_version').get() as any).user_version;
+    if (revision >= 1) return;
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const notes = this.db.prepare('SELECT note_id,content,deleted_at FROM notes').all() as any[];
+      this.db.exec('DELETE FROM note_refs');
+      for (const n of notes) this.updateRefs(n.note_id, n.content, !n.deleted_at);
+      if (notes.length) {
+        const next = this.version + 1;
+        this.db.prepare('UPDATE meta SET business_version=? WHERE id=1').run(next);
+        // Makes an existing search/reference index project every note under the new parser.
+        this.db
+          .prepare('INSERT INTO changes VALUES(?,?)')
+          .run(next, JSON.stringify({ notes: notes.map((n) => n.note_id), keys: [] }));
+      }
+      this.db.exec('PRAGMA user_version=1;COMMIT');
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
   }
   schema() {
     this.db.exec(`

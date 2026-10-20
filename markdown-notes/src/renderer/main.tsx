@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import DOMPurify from 'dompurify';
+import { safeMarkdown } from './markdown';
 import {
   BookOpen,
   Plus,
@@ -43,8 +43,9 @@ import {
   Hash,
   Command,
   PanelLeft,
+  FileDown,
 } from 'lucide-react';
-import { markdown, codepoints, key, matchRange, trim } from '../shared/rules';
+import { codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
 import './style.css';
 import { version as APP_VERSION } from '../../package.json';
@@ -487,16 +488,7 @@ function App() {
   }, [modal?.type, refresh, status?.fault]);
 
   const content = draft?.content ?? '',
-    preview = useMemo(
-      () =>
-        DOMPurify.sanitize(markdown(content), {
-          FORBID_TAGS: ['img', 'script', 'iframe', 'style', 'object'],
-          FORBID_ATTR: ['style'],
-          ADD_ATTR: ['data-note'],
-          ALLOW_DATA_ATTR: true,
-        }),
-      [content],
-    );
+    preview = useMemo(() => safeMarkdown(content), [content]);
   const edit = (value: string) => {
     if (!draftRef.current || note?.deleted_at) return;
     const old = draftRef.current;
@@ -964,6 +956,20 @@ function App() {
                           }
                         >
                           <Download size={16} />
+                        </button>
+                        <button
+                          className="icon"
+                          title="导出PDF"
+                          aria-label="导出PDF"
+                          disabled={!!busy}
+                          onClick={() =>
+                            void act('导出PDF', async () => {
+                              await api.call('export.pdf', { note_id: note.note_id });
+                              notify('PDF已导出（含中文与公式字体）');
+                            })
+                          }
+                        >
+                          <FileDown size={16} />
                         </button>
                         <button
                           className="icon danger-hover"
@@ -1733,7 +1739,22 @@ function App() {
                     }
                   </pre>
                   <p>
-                    双向引用按当前笔记标题匹配，区分有效与失效。代码块内与转义标记不建立关系。名称中的井号、竖线等按字面匹配。
+                    双向引用按当前笔记标题匹配，区分有效与失效。代码、公式内与转义标记不建立关系。名称中的井号、竖线等按字面匹配。
+                  </p>
+                  <h3>数学公式与PDF</h3>
+                  <pre>
+                    {
+                      '$E=mc^2$  或  \\(E=mc^2\\)\n\n$$\n\\frac{a}{b}+\\sqrt{x}\n$$\n\n\\[\\int_0^1 x^2\\,dx=\\frac{1}{3}\\]'
+                    }
+                  </pre>
+                  <p>
+                    支持常用LaTeX分式、上下标、积分、矩阵和对齐环境；公式内中文建议用 \\text
+                    {'{中文}'}
+                    。公式语法有误时显示源码提示。代码中的公式标记保持原样，普通金额中的美元符号可写成
+                    \\$。
+                  </p>
+                  <p>
+                    点击笔记右上角“导出PDF”可保存当前笔记为A4文档，包含标题、正文和公式。字体离线加载，PDF保留可选择的中文文字；不包含回收站、标签等备份元数据，不能用于恢复资料库。
                   </p>
                   <p>
                     “正文已保存”与“索引可用”分别显示。磁盘写入失败时请保留编辑窗口并重试；不要直接修改内部数据库文件。

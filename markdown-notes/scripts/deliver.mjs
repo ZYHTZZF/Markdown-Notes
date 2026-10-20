@@ -74,6 +74,7 @@ const sourceNames = [
   'vite.config.mts',
   'playwright.config.ts',
   'index.html',
+  'print.html',
   '.prettierrc.json',
   '.gitignore',
   'THIRD-PARTY-NOTICES.txt',

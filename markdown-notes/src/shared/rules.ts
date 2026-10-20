@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import type { RefSpan, Snapshot } from './types';
+import { mathAt, mathPlugin } from './math';
 
 export const LIMITS = {
   notes: 10_000,
@@ -125,6 +126,14 @@ export function refs(content: string): RefSpan[] {
     } else i = j - 1;
   }
   const out: RefSpan[] = [];
+  for (let i = 0; i < content.length; i++) {
+    if (excluded[i] || (content[i] !== '$' && content[i] !== '\\')) continue;
+    const math = mathAt(content, i);
+    if (math && !excluded.subarray(i, math.end).includes(1)) {
+      excluded.fill(1, i, math.end);
+      i = math.end - 1;
+    }
+  }
   for (let i = content.indexOf('[['); i >= 0; i = content.indexOf('[[', i + 1)) {
     if (excluded[i] || content.slice(i, i + 2) !== '[[') continue;
     let s = 0;
@@ -218,7 +227,7 @@ export function validateSnapshot(s: Snapshot) {
   return { notes: s.notes.length, tags: s.tags.length, bytes: total, links };
 }
 
-export function markdown(content: string) {
+export function markdown(content: string, renderMath?: (tex: string, display: boolean) => string) {
   let source = content;
   for (const r of refs(content).reverse()) {
     const label = r.name.replace(/[\\`*_[\]<>|]/g, '\\$&');
@@ -228,6 +237,7 @@ export function markdown(content: string) {
       source.slice(r.end);
   }
   const parser = new MarkdownIt({ html: false, linkify: false });
+  mathPlugin(parser, renderMath);
   parser.renderer.rules.image = () =>
     '<span class="image-placeholder">[图片：基础版不加载图片]</span>';
   const link =
