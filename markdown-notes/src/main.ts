@@ -6,6 +6,8 @@ import { mkdirSync, readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { Rpc } from './shared/types';
 import { exportPdf, registerPdfExport } from './pdf-export';
+import { AppearanceStore } from './appearance-store';
+import { appearanceSchema } from './shared/appearance';
 
 app.setName('知页');
 if (process.env.ZHIYE_DATA_DIR) {
@@ -88,6 +90,7 @@ if (gotLock)
     const root = process.env.ZHIYE_DATA_DIR || join(app.getPath('userData'), 'library');
     mkdirSync(root, { recursive: true });
     registerPdfExport();
+    const appearance = new AppearanceStore(join(app.getPath('userData'), 'appearance'));
     backend = new Worker(join(__dirname, 'backend.cjs'), {
       workerData: { root, indexWorker: join(__dirname, 'indexer.cjs') },
     });
@@ -178,8 +181,36 @@ if (gotLock)
           shell.showItemInFolder(path);
           return { ok: true, data: true };
         }
+        if (method.startsWith('appearance.')) {
+          try {
+            if (method === 'appearance.set')
+              return { ok: true, data: appearance.set(appearanceSchema.parse(payload)) };
+            z.object({}).strict().parse(payload);
+            if (method === 'appearance.get') return { ok: true, data: appearance.get() };
+            if (method === 'appearance.reset') return { ok: true, data: appearance.reset() };
+            if (method !== 'appearance.chooseImage') throw new Error('不支持的外观操作');
+            const chosen = await dialog.showOpenDialog(win!, {
+              title: '选择背景图片',
+              properties: ['openFile'],
+              filters: [{ name: 'PNG / JPEG图片', extensions: ['png', 'jpg', 'jpeg'] }],
+            });
+            if (chosen.canceled || !chosen.filePaths[0])
+              return { ok: false, code: 'E_CANCELLED', message: '已取消选择背景图片' };
+            return { ok: true, data: appearance.selectImage(chosen.filePaths[0]) };
+          } catch (error: any) {
+            throw Object.assign(
+              new Error(
+                error instanceof z.ZodError ? '外观设置格式无效，请重新选择' : error.message,
+              ),
+              { code: 'E_APPEARANCE' },
+            );
+          }
+        }
         if (method === 'export.pdf') {
-          const p = z.object({ note_id: z.string().uuid() }).strict().parse(payload);
+          const { include_background, ...p } = z
+            .object({ note_id: z.string().uuid(), include_background: z.boolean().default(false) })
+            .strict()
+            .parse(payload);
           const status = await system('system.status');
           if (status.fault || status.exclusive || request.epoch !== status.epoch)
             throw Object.assign(new Error('资料库状态已改变或正在恢复，请稍后重试'), {
@@ -207,6 +238,10 @@ if (gotLock)
             data: await exportPdf(owner, root, chosen.filePath, {
               title: note.title,
               content: note.content,
+              appearance: {
+                ...appearance.get(),
+                ...(include_background ? {} : { background: 'default', image_data: null }),
+              },
             }),
           };
         }

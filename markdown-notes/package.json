@@ -1,7 +1,7 @@
 {
   "name": "markdown-notes",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "知页：离线优先的个人 Markdown 笔记与知识管理工具",
   "productName": "知页",
   "main": "dist/main.cjs",

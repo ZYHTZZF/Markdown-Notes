@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-20T09:45:00.466Z",
-  "version": "1.2.0",
+  "date": "2026-10-20T10:03:23.909Z",
+  "version": "1.3.0",
   "baseline": [
     {
       "path": "需求分析文档/01-需求分析文档.md",
@@ -30,11 +30,11 @@
     },
     {
       "path": "dist/main.cjs",
-      "sha256": "ef1ec706a939f4dae41242e8369a3dbaaec52e938ad90e0301476d9e5ae510fa"
+      "sha256": "0a17e8183984aa87d2a76df407f6df5d33dac84aad3cc04777a95a11a20f30cf"
     },
     {
       "path": "dist/main.cjs.map",
-      "sha256": "0cbc022f8d703031d8d5c32a9ebbab2d8cecf67fa02c6a934e7b02ce062deac6"
+      "sha256": "6d7db598be1af0eca1b9d04cdf242538c467506a88ad1b42b85ce6a80385c37d"
     },
     {
       "path": "dist/preload.cjs",
@@ -289,46 +289,46 @@
       "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa"
     },
     {
-      "path": "dist/renderer/assets/index-B6zi7_yt.js",
-      "sha256": "ad9b24be1ddac756b8cdb55e3bebce161fabc96168e8e61fcd64f8df6de93fad"
+      "path": "dist/renderer/assets/appearance-eBXPYP5z.js",
+      "sha256": "437829e81e4b9c49d5e68a0277dc1e571e215dc0dbfce874f82866f2c0e84b09"
     },
     {
-      "path": "dist/renderer/assets/index-Cf9fK9wc.css",
-      "sha256": "225557185ecaca4859a81ce6a59dffa9f2bfaddfa96d3688400d1fef4fb51b6a"
-    },
-    {
-      "path": "dist/renderer/assets/markdown-sDR1r1vn.js",
-      "sha256": "6b63acb8fcacb258dab12b484a67521bed730433d75b1b81133acded5292e4b2"
-    },
-    {
-      "path": "dist/renderer/assets/markdown-tUqyOkrX.css",
+      "path": "dist/renderer/assets/appearance-tUqyOkrX.css",
       "sha256": "e7ae48b9df8d0c28aeab05502bc2ec10c1e36f5abb434f71b87e332b158eb7cb"
     },
     {
-      "path": "dist/renderer/assets/print-5E_8_ESm.js",
-      "sha256": "71d1244c662f1156f33251b69a15be748a62fd5136b26cb5bdf89af855c75e1f"
+      "path": "dist/renderer/assets/index-Cnk0kTM7.js",
+      "sha256": "9e0bc8ca32330754ad756eeb0b597bcebb12edd2e487162f7307ae115fe4fec6"
     },
     {
-      "path": "dist/renderer/assets/print-CXu9TgfF.css",
-      "sha256": "e2af39180633d9d5b67a8df899bbed6b48690a9747773305551ecc2543441412"
+      "path": "dist/renderer/assets/index-DUQaibsR.css",
+      "sha256": "9d12981f1d5d0839944a7e2c32a730c74985af9ff235574e2481663932629889"
+    },
+    {
+      "path": "dist/renderer/assets/print-D_ViP0wm.css",
+      "sha256": "499cda9a78bbf62115ab58fc7c33c1e45bbf2c8cfc129e68953dbb20497e9cd5"
+    },
+    {
+      "path": "dist/renderer/assets/print-XrsFFyEb.js",
+      "sha256": "9ed233bd23573252da44222594975fe7ce18bb1567c870e1ed6890a41f29a4b6"
     },
     {
       "path": "dist/renderer/index.html",
-      "sha256": "042c04343789b85a5533b1194e716d59bc05a8cfbc41b2d5b6ef0fdd1be2be36"
+      "sha256": "ec99b055a2625558aa1d669acd1445756fc3dcf3c831931b9f99078cbfd9ebf8"
     },
     {
       "path": "dist/renderer/print.html",
-      "sha256": "b8a22facda77c05918976195b1324ebe4057b5ec2f80c455dd31344b7eabdb34"
+      "sha256": "de2e440a9f8b252b04051ed16495946bbbb7d50531edda5d4b95963b9e65c091"
     }
   ],
   "packaged": {
-    "date": "2026-10-20T09:43:47.619Z",
+    "date": "2026-10-20T09:59:56.003Z",
     "pass": true,
     "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
     "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
     "runtime": {
       "packaged": true,
-      "version": "1.2.0",
+      "version": "1.3.0",
       "electron": "44.9.1",
       "node": "24.22.0"
     },
@@ -338,6 +338,7 @@
       "安全Markdown预览",
       "自动持久化",
       "成品离线数学公式预览与真实PDF导出",
+      "成品主色与纯色背景设置、带背景导出选项",
       "实际打包标志与版本"
     ]
   }

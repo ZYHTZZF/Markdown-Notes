@@ -14,6 +14,9 @@
   --muted: #636366;
   --line: #e5e5ea;
   --accent: #0066cc;
+  --accent-fill: #0066cc;
+  --on-accent: #ffffff;
+  --on-accent-hover: #ffffff;
   --accent-dark: #0055aa;
   --selection: #eaf3ff;
   --hover: #ededf0;
@@ -141,19 +144,20 @@ kbd {
   color: var(--muted);
 }
 .new-button {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+  background: var(--accent-fill);
+  color: var(--on-accent);
+  border-color: var(--accent-fill);
   box-shadow:
-    0 2px 4px #0066cc16,
+    0 2px 4px color-mix(in srgb, var(--accent-fill) 9%, transparent),
     inset 0 1px 0 #ffffff24;
 }
 .new-button:hover:not(:disabled) {
   background: var(--accent-dark);
   border-color: var(--accent-dark);
+  color: var(--on-accent-hover);
 }
 .new-button kbd {
-  color: white;
+  color: inherit;
   background: #ffffff14;
   border-color: #ffffff40;
   margin-left: 16px;
@@ -167,6 +171,7 @@ kbd {
 
 /* Reserve the right edge for native Windows window controls. */
 .app-shell {
+  isolation: isolate;
   position: relative;
   display: grid;
   grid-template: 56px minmax(0, 1fr) / var(--sidebar-width) minmax(0, 1fr);
@@ -251,7 +256,7 @@ kbd {
 }
 .global-search:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px #0066cc16;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-fill) 9%, transparent);
   background: white;
 }
 .global-search input {
@@ -706,7 +711,7 @@ kbd {
 .pane-divider:focus-visible > span,
 .resizing .pane-divider > span {
   background: var(--accent);
-  box-shadow: 0 0 0 1px #0066cc15;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-fill) 9%, transparent);
 }
 .pane-divider:focus-visible {
   outline: 2px solid var(--accent);
@@ -719,7 +724,7 @@ kbd {
   left: 10px;
   color: var(--accent);
   background: white;
-  border: 1px solid #bfd8f5;
+  border: 1px solid var(--selection);
   border-radius: 8px;
   padding: 8px 12px;
   white-space: nowrap;
@@ -903,7 +908,7 @@ kbd {
 }
 .source-pane textarea:focus-visible {
   outline: none;
-  box-shadow: inset 2px 0 0 #0066cc40;
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--accent-fill) 25%, transparent);
 }
 .source-pane textarea::placeholder {
   color: var(--muted);
@@ -954,7 +959,7 @@ kbd {
 .markdown a {
   color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: #0066cc66;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
   text-underline-offset: 3px;
 }
 .markdown a:hover {
@@ -1022,7 +1027,7 @@ kbd {
   color: var(--muted);
 }
 mark {
-  background: #dcecff;
+  background: var(--selection);
   color: #174475;
   border-radius: 3px;
   padding: 0 1px;

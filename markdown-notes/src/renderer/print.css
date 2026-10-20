@@ -52,7 +52,7 @@ p {
   widows: 3;
 }
 a {
-  color: #0056ad;
+  color: var(--print-accent, #0056ad);
   text-decoration: none;
 }
 blockquote {
@@ -98,4 +98,16 @@ tr,
 }
 .image-placeholder {
   color: #636366;
+}
+html[data-background='solid']::before,
+html[data-background='image']::before {
+  content: '';
+  position: fixed;
+  inset: -18mm -16mm;
+  z-index: -1;
+  background-color: var(--background-color);
+  background-image: linear-gradient(#ffffffe6, #ffffffe6), var(--background-image);
+  background-size: cover;
+  background-position: center;
+  opacity: var(--background-strength);
 }

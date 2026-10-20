@@ -1,10 +1,11 @@
 import { safeMarkdown } from './markdown';
 import './print.css';
+import { appearanceColors, backgroundStyle, type AppearanceView } from '../shared/appearance';
 
 declare global {
   interface Window {
     pdfDocument: {
-      source(): Promise<{ title: string; content: string }>;
+      source(): Promise<{ title: string; content: string; appearance?: AppearanceView }>;
       ready(ok: boolean): Promise<void>;
     };
   }
@@ -12,6 +13,18 @@ declare global {
 async function prepare() {
   try {
     const source = await window.pdfDocument.source();
+    if (source.appearance) {
+      const a = source.appearance;
+      for (const [name, value] of Object.entries(backgroundStyle(a)))
+        document.documentElement.style.setProperty(name, value);
+      document.documentElement.style.setProperty('--print-accent', appearanceColors(a.accent).text);
+      document.documentElement.dataset.background = a.background;
+      if (a.background === 'image' && a.image_data) {
+        const image = new Image();
+        image.src = a.image_data;
+        await image.decode();
+      }
+    }
     document.title = source.title;
     document.getElementById('title')!.textContent = source.title;
     document.getElementById('content')!.innerHTML = safeMarkdown(source.content);

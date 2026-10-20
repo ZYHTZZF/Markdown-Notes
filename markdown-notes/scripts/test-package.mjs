@@ -22,12 +22,25 @@ try {
   );
   assert.equal(await page.locator('.markdown h1').textContent(), 'Windows成品验证');
   assert.equal(await page.locator('.markdown .katex').count(), 2);
+  await page.getByRole('button', { name: '备份与恢复', exact: true }).click();
+  await page.getByRole('button', { name: '外观', exact: true }).click();
+  await page.getByRole('button', { name: '选择主色#7352c7', exact: true }).click();
+  await page.getByLabel('背景颜色', { exact: true }).fill('#e7e3ef');
+  await page.getByRole('button', { name: '应用外观', exact: true }).click();
+  await page.waitForFunction(
+    () =>
+      getComputedStyle(document.documentElement).getPropertyValue('--accent-fill').trim() ===
+      '#7352c7',
+  );
+  await page.getByRole('button', { name: '关闭对话框', exact: true }).click();
   await page.evaluate(() => document.fonts.ready.then(() => true));
   const pdf = resolve('reports/成品中文与公式验证.pdf');
   await app.evaluate(({ dialog }, path) => {
     dialog.showSaveDialog = async () => ({ canceled: false, filePath: path });
   }, pdf);
   await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+  await page.getByRole('checkbox', { name: '带背景导出', exact: true }).check();
+  await page.getByRole('button', { name: '导出PDF文件', exact: true }).click();
   await page.waitForFunction(() =>
     document.querySelector('[role="status"]')?.textContent?.includes('PDF已导出'),
   );
@@ -54,6 +67,7 @@ try {
       '安全Markdown预览',
       '自动持久化',
       '成品离线数学公式预览与真实PDF导出',
+      '成品主色与纯色背景设置、带背景导出选项',
       '实际打包标志与版本',
     ],
   };

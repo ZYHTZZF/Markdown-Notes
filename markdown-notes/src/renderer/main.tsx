@@ -50,6 +50,8 @@ import type { NoteView, Tag } from '../shared/types';
 import './style.css';
 import { version as APP_VERSION } from '../../package.json';
 import { usePaneLayout, PaneDivider } from './pane-layout';
+import { AppearanceSettings, applyAppearance } from './appearance';
+import { DEFAULT_APPEARANCE, type AppearanceView } from '../shared/appearance';
 
 const api = window.notesApi;
 const date = (s: string) =>
@@ -154,6 +156,20 @@ function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 function App() {
+  const [appearance, setAppearance] = useState<AppearanceView>({
+    ...DEFAULT_APPEARANCE,
+    image_data: null,
+  });
+  const [pdfBackground, setPdfBackground] = useState(false);
+  useEffect(() => {
+    applyAppearance(appearance);
+  }, [appearance]);
+  useEffect(() => {
+    void api
+      .call('appearance.get')
+      .then(setAppearance)
+      .catch(() => {});
+  }, []);
   const layout = usePaneLayout();
   const [status, setStatus] = useState<any>(null),
     [allTags, setAllTags] = useState<Tag[]>([]),
@@ -962,12 +978,10 @@ function App() {
                           title="导出PDF"
                           aria-label="导出PDF"
                           disabled={!!busy}
-                          onClick={() =>
-                            void act('导出PDF', async () => {
-                              await api.call('export.pdf', { note_id: note.note_id });
-                              notify('PDF已导出（含中文与公式字体）');
-                            })
-                          }
+                          onClick={() => {
+                            setPdfBackground(false);
+                            setModal({ type: 'pdfExport' });
+                          }}
                         >
                           <FileDown size={16} />
                         </button>
@@ -1343,6 +1357,7 @@ function App() {
               tagPicker: '为笔记添加标签',
               settings: '知识库设置',
               restore: '恢复预检',
+              pdfExport: '导出PDF',
             }[modal.type] ?? '设置'
           }
           onClose={closeModal}
@@ -1552,6 +1567,7 @@ function App() {
               <div className="settings-tabs">
                 {[
                   ['library', '资料库'],
+                  ['appearance', '外观'],
                   ['backup', '备份与恢复'],
                   ['help', '使用帮助'],
                 ].map(([tab, label]) => (
@@ -1637,6 +1653,9 @@ function App() {
                     插件和主题扩展属于P2，本基础版本未启用。云同步、移动端、多人协作不在本版范围内。
                   </p>
                 </div>
+              )}
+              {settingsTab === 'appearance' && (
+                <AppearanceSettings value={appearance} onChange={setAppearance} notify={notify} />
               )}
               {settingsTab === 'backup' && (
                 <div className="settings-content">
@@ -1812,6 +1831,43 @@ function App() {
                 >
                   <RotateCcw size={15} />
                   执行整体恢复
+                </button>
+              </div>
+            </>
+          )}
+          {modal.type === 'pdfExport' && (
+            <>
+              <p className="muted">将当前笔记导出为A4 PDF，保留中文与公式字体。</p>
+              <label className="pdf-background-choice">
+                <input
+                  type="checkbox"
+                  checked={pdfBackground}
+                  onChange={(e) => setPdfBackground(e.target.checked)}
+                />
+                带背景导出
+              </label>
+              <p className="muted mini">
+                不勾选时使用纯白背景；勾选后使用已保存的工作区背景和强度，正文保留浅色阅读底层。默认外观的背景为白色。
+              </p>
+              <div className="modal-actions">
+                <button className="button" onClick={closeModal}>
+                  取消
+                </button>
+                <button
+                  className="new-button"
+                  disabled={!!busy}
+                  onClick={() =>
+                    void act('导出PDF', async () => {
+                      await api.call('export.pdf', {
+                        note_id: note!.note_id,
+                        include_background: pdfBackground,
+                      });
+                      setModal(null);
+                      notify('PDF已导出（含中文与公式字体）');
+                    })
+                  }
+                >
+                  导出PDF文件
                 </button>
               </div>
             </>

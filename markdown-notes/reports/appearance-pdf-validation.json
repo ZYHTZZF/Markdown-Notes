@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-20T10:03:23.514482+00:00",
+  "tool": "PyMuPDF 1.28.2",
+  "checks": {
+    "both_multipage": true,
+    "matching_page_counts": true,
+    "background_on_every_page": true,
+    "plain_pages_are_white": true,
+    "chinese_and_last_section": true,
+    "all_fonts_and_text": true
+  },
+  "documents": {
+    "background": {
+      "pages": [
+        {
+          "page": 1,
+          "sample_rgb": [
+            250,
+            236,
+            248
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        },
+        {
+          "page": 2,
+          "sample_rgb": [
+            250,
+            236,
+            248
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        },
+        {
+          "page": 3,
+          "sample_rgb": [
+            250,
+            246,
+            248
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        }
+      ],
+      "page_count": 3,
+      "chinese_body": true,
+      "chinese_formula": true,
+      "last_section": true
+    },
+    "plain": {
+      "pages": [
+        {
+          "page": 1,
+          "sample_rgb": [
+            255,
+            255,
+            255
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        },
+        {
+          "page": 2,
+          "sample_rgb": [
+            255,
+            255,
+            255
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        },
+        {
+          "page": 3,
+          "sample_rgb": [
+            255,
+            255,
+            255
+          ],
+          "text_present": true,
+          "no_replacement": true,
+          "fonts_embedded": true
+        }
+      ],
+      "page_count": 3,
+      "chinese_body": true,
+      "chinese_formula": true,
+      "last_section": true
+    }
+  },
+  "pass": true
+}

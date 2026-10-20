@@ -1,41 +1,41 @@
 {
-  "date": "2026-10-20T09:41:54.331Z",
+  "date": "2026-10-20T10:03:15.924Z",
   "observations": [
     {
       "mode": "close",
       "run": 0,
       "errors": [],
-      "stderr": "Debugger ending on ws://127.0.0.1:4875/e5051ff8-9b17-4662-862e-d7b63a3bf01e\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+      "stderr": "Debugger ending on ws://127.0.0.1:2905/ea43f9fa-8574-4643-8d1a-e663e70e76d0\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
     },
     {
       "mode": "close",
       "run": 1,
       "errors": [],
-      "stderr": "Debugger ending on ws://127.0.0.1:4891/d27f7d88-10ff-4c72-8847-0d68b22cfe9d\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+      "stderr": "Debugger ending on ws://127.0.0.1:2909/b64f1232-b4e7-4246-8122-2946146d9d8d\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
     },
     {
       "mode": "close",
       "run": 2,
       "errors": [],
-      "stderr": "Debugger ending on ws://127.0.0.1:4897/e66b9126-21fd-43ce-bafe-cc08a6fafc18\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+      "stderr": "Debugger ending on ws://127.0.0.1:2914/d036d9cf-6434-4c97-83f6-a6c2f0513f61\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
     },
     {
       "mode": "close",
       "run": 3,
       "errors": [],
-      "stderr": "Debugger ending on ws://127.0.0.1:4901/44701f5d-77d9-480a-86f9-fa362f66a119\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+      "stderr": "Debugger ending on ws://127.0.0.1:2918/224fe04e-4ec1-4bc0-9718-7f429fea8d4c\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
     },
     {
       "mode": "close",
       "run": 4,
       "errors": [],
-      "stderr": "Debugger ending on ws://127.0.0.1:4905/fcedc6c4-9e3f-49e1-b964-b8d43f93681f\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+      "stderr": "Debugger ending on ws://127.0.0.1:2922/2e642d5b-91b8-4b38-91f0-8a687cd66423\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
     },
     {
       "mode": "destroy",
       "run": 0,
       "errors": [],
-      "stderr": "Waiting for the debugger to disconnect...\r\n[52456:1020/174148.970:ERROR:gpu\\ipc\\client\\command_buffer_proxy_impl.cc:490] GPU state invalid after WaitForGetOffsetInRange.\r\n[52456:1020/174148.970:ERROR:gpu\\ipc\\client\\command_buffer_proxy_impl.cc:490] GPU state invalid after WaitForGetOffsetInRange.\r\n"
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
     },
     {
       "mode": "destroy",

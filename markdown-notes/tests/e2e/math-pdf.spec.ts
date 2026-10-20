@@ -65,6 +65,7 @@ A &= \begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix} \\
       dialog.showSaveDialog = async () => ({ canceled: false, filePath: file });
     }, file);
     await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+    await page.getByRole('button', { name: '导出PDF文件', exact: true }).click();
     await expect(page.getByRole('status')).toContainText('PDF已导出', { timeout: 25000 });
     expect(readFileSync(file).subarray(0, 5).toString()).toBe('%PDF-');
     const list = await page.evaluate(() => window.notesApi.call('note.list'));
@@ -82,7 +83,9 @@ A &= \begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix} \\
       dialog.showSaveDialog = async () => ({ canceled: true, filePath: '' });
     });
     await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+    await page.getByRole('button', { name: '导出PDF文件', exact: true }).click();
     await expect(page.getByRole('button', { name: '导出PDF', exact: true })).toBeEnabled();
+    await page.getByRole('button', { name: '取消', exact: true }).click();
     expect(readFileSync(file)).toEqual(previous);
     // Internal-path writes are rejected, even when the native chooser is stubbed by a test.
     const denied = join(root, 'unsafe.pdf');
@@ -141,6 +144,7 @@ $\href{javascript:alert(1)}{x}\includegraphics{https://example.com/a.png}$
       });
     }, file);
     await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+    await page.getByRole('button', { name: '导出PDF文件', exact: true }).click();
     await expect(page.getByRole('status')).toContainText('PDF导出失败', { timeout: 25000 });
     expect(readFileSync(file, 'utf8')).toBe('old file');
     expect(
@@ -149,7 +153,9 @@ $\href{javascript:alert(1)}{x}\includegraphics{https://example.com/a.png}$
       ),
     ).toBeFalsy();
     expect(await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().length)).toBe(1);
+    await page.getByRole('button', { name: '取消', exact: true }).click();
     await page.getByRole('button', { name: '导出PDF', exact: true }).click();
+    await page.getByRole('button', { name: '导出PDF文件', exact: true }).click();
     await expect(page.getByRole('status')).toContainText('PDF已导出', { timeout: 25000 });
     expect(readFileSync(file).subarray(0, 5).toString()).toBe('%PDF-');
   } finally {

@@ -13,8 +13,9 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { randomUUID } from 'node:crypto';
+import type { AppearanceView } from './shared/appearance';
 
-type Source = { title: string; content: string };
+type Source = { title: string; content: string; appearance?: AppearanceView };
 type Job = { window: BrowserWindow; source: Source; finish: (ok: boolean) => void };
 const jobs = new Map<number, Job>();
 function jobFor(event: IpcMainInvokeEvent) {

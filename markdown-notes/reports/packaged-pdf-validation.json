@@ -8,5 +8,11 @@
     "BAAAAA+MicrosoftYaHei",
     "CAAAAA+KaTeX_Math-Italic",
     "DAAAAA+KaTeX_Main-Regular"
-  ]
+  ],
+  "background_sample_rgb": [
+    254,
+    254,
+    254
+  ],
+  "pass": true
 }

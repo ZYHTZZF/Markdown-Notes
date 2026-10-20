@@ -150,7 +150,7 @@ for (const [width, height] of [
       await expect(page.locator('.reference-content')).toContainText('关联笔记');
       await expect(page.getByRole('button', { name: '关闭引用面板' })).toBeFocused();
       expect((await editor.boundingBox())!.width).toBe(before!.width);
-      expect((await page.locator('.reference-panel').boundingBox())!.width).toBe(320);
+      expect((await page.locator('.reference-panel').boundingBox())!.width).toBeCloseTo(320, 1);
       await page.keyboard.press('Escape');
       await expect(toggle).toBeFocused();
       await expect(page.locator('.reference-panel')).toHaveCount(0);

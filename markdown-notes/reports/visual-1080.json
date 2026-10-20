@@ -3,16 +3,16 @@
   "height": 700,
   "contrast": {
     "checked": 83,
-    "minimum": 4.9735839517094105,
+    "minimum": 5.124659073213778,
     "failures": []
   },
   "drawerContrast": {
-    "checked": 93,
-    "minimum": 4.9735839517094105,
+    "checked": 91,
+    "minimum": 5.124659073213778,
     "failures": []
   },
   "modalContrast": {
-    "checked": 13,
+    "checked": 14,
     "minimum": 5.21763328421225,
     "failures": []
   },
