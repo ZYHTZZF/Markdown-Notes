@@ -42,11 +42,13 @@ import {
   Folder,
   Hash,
   Command,
+  PanelLeft,
 } from 'lucide-react';
 import { markdown, codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
 import './style.css';
 import { version as APP_VERSION } from '../../package.json';
+import { usePaneLayout, PaneDivider } from './pane-layout';
 
 const api = window.notesApi;
 const date = (s: string) =>
@@ -151,6 +153,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 function App() {
+  const layout = usePaneLayout();
   const [status, setStatus] = useState<any>(null),
     [allTags, setAllTags] = useState<Tag[]>([]),
     [items, setItems] = useState<any[]>([]),
@@ -517,6 +520,7 @@ function App() {
   };
   const switchView = (next: 'all' | 'trash') =>
     void act('切换视图', async () => {
+      if (layout.hidden.list) layout.toggle('list');
       setView(next);
       setFilters([]);
       setQuery('');
@@ -621,7 +625,19 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div
+      className={
+        'app-shell' +
+        (layout.resizing ? ' resizing' : '') +
+        (layout.hidden.sidebar ? ' sidebar-hidden' : '')
+      }
+      style={
+        {
+          '--sidebar-width': layout.widths.sidebar + 'px',
+          '--list-width': layout.widths.list + 'px',
+        } as React.CSSProperties
+      }
+    >
       <header className="topbar" aria-label="窗口工具栏">
         <div className="brand">
           <div className="brand-mark">
@@ -630,6 +646,26 @@ function App() {
           <strong>知页</strong>
           <span>个人知识库</span>
         </div>
+        <div className="pane-toggles" aria-label="工作区显示">
+          <button
+            className={'icon' + (!layout.hidden.sidebar ? ' pane-visible' : '')}
+            aria-label={layout.hidden.sidebar ? '展开导航栏' : '隐藏导航栏'}
+            title={layout.hidden.sidebar ? '展开导航栏' : '隐藏导航栏'}
+            aria-pressed={!layout.hidden.sidebar}
+            onClick={() => layout.toggle('sidebar')}
+          >
+            <PanelLeft size={18} />
+          </button>
+          <button
+            className={'icon' + (!layout.hidden.list ? ' pane-visible' : '')}
+            aria-label={layout.hidden.list ? '展开笔记列表' : '隐藏笔记列表'}
+            title={layout.hidden.list ? '展开笔记列表' : '隐藏笔记列表'}
+            aria-pressed={!layout.hidden.list}
+            onClick={() => layout.toggle('list')}
+          >
+            <Columns2 size={18} />
+          </button>
+        </div>
         <div className="global-search">
           <Search size={17} />
           <input
@@ -637,6 +673,7 @@ function App() {
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
+              if (e.target.value && layout.hidden.list) layout.toggle('list');
               if (view === 'trash') setView('all');
             }}
             placeholder="搜索你的知识库…"
@@ -662,90 +699,94 @@ function App() {
           新建笔记
         </button>
       </header>
-      <aside className="sidebar">
-        <div className="workspace-label">
-          知识空间 <span>本地</span>
-        </div>
-        <button
-          className={'nav ' + (view === 'all' && !filters.length ? 'active' : '')}
-          onClick={() => switchView('all')}
-        >
-          <FileText size={17} />
-          全部笔记<span>{status?.stats?.active ?? 0}</span>
-        </button>
-        <button
-          className={'nav ' + (view === 'trash' ? 'active' : '')}
-          onClick={() => switchView('trash')}
-        >
-          <Trash2 size={17} />
-          回收站<span>{status?.stats?.trash ?? 0}</span>
-        </button>
-        <div className="section-label">
-          标签分类
+      {!layout.hidden.sidebar && (
+        <aside id="navigation-pane" className="sidebar">
+          <div className="workspace-label">
+            知识空间 <span>本地</span>
+          </div>
           <button
-            className="icon"
-            title="管理标签"
-            aria-label="管理标签"
-            onClick={() => setModal({ type: 'tags' })}
+            className={'nav ' + (view === 'all' && !filters.length ? 'active' : '')}
+            onClick={() => switchView('all')}
           >
-            <Plus size={15} />
+            <FileText size={17} />
+            全部笔记<span>{status?.stats?.active ?? 0}</span>
           </button>
-        </div>
-        <div className="tag-navigation">
-          {allTags.map((t) => (
+          <button
+            className={'nav ' + (view === 'trash' ? 'active' : '')}
+            onClick={() => switchView('trash')}
+          >
+            <Trash2 size={17} />
+            回收站<span>{status?.stats?.trash ?? 0}</span>
+          </button>
+          <div className="section-label">
+            标签分类
             <button
-              key={t.tag_id}
-              className={'tag-nav ' + (filters.includes(t.tag_id) ? 'selected' : '')}
-              onClick={() => {
-                if (view === 'trash') setView('all');
-                setFilters((prev) =>
-                  prev.includes(t.tag_id)
-                    ? prev.filter((x) => x !== t.tag_id)
-                    : [...prev, t.tag_id],
-                );
-              }}
+              className="icon"
+              title="管理标签"
+              aria-label="管理标签"
+              onClick={() => setModal({ type: 'tags' })}
             >
-              <span className="tag-dot" />
-              <span>{t.name}</span>
-              {filters.includes(t.tag_id) && <Check size={13} />}
+              <Plus size={15} />
             </button>
-          ))}
-          {!allTags.length && (
-            <p className="sidebar-hint">
-              用标签整理不同主题
-              <br />
+          </div>
+          <div className="tag-navigation">
+            {allTags.map((t) => (
               <button
+                key={t.tag_id}
+                className={'tag-nav ' + (filters.includes(t.tag_id) ? 'selected' : '')}
                 onClick={() => {
-                  setInput('');
-                  setModal({ type: 'tagEdit' });
+                  if (layout.hidden.list) layout.toggle('list');
+                  if (view === 'trash') setView('all');
+                  setFilters((prev) =>
+                    prev.includes(t.tag_id)
+                      ? prev.filter((x) => x !== t.tag_id)
+                      : [...prev, t.tag_id],
+                  );
                 }}
               >
-                创建第一个标签 <Plus size={12} />
+                <span className="tag-dot" />
+                <span>{t.name}</span>
+                {filters.includes(t.tag_id) && <Check size={13} />}
               </button>
-            </p>
-          )}
-        </div>
-        {filters.length > 0 && (
-          <button className="clear-filter" onClick={() => setFilters([])}>
-            清除筛选 · {filters.length}个标签
-          </button>
-        )}
-        <div className="sidebar-bottom">
-          <div className="offline">
-            <span className="local-dot" />
-            <span>本地存储 · 离线可用</span>
-            <CloudOff size={14} />
+            ))}
+            {!allTags.length && (
+              <p className="sidebar-hint">
+                用标签整理不同主题
+                <br />
+                <button
+                  onClick={() => {
+                    setInput('');
+                    setModal({ type: 'tagEdit' });
+                  }}
+                >
+                  创建第一个标签 <Plus size={12} />
+                </button>
+              </p>
+            )}
           </div>
-          <button className="profile" onClick={() => openSettings()}>
-            <span className="avatar">我</span>
-            <span>
-              <strong>个人知识库</strong>
-              <small>只属于你的思考空间</small>
-            </span>
-            <Settings size={17} />
-          </button>
-        </div>
-      </aside>
+          {filters.length > 0 && (
+            <button className="clear-filter" onClick={() => setFilters([])}>
+              清除筛选 · {filters.length}个标签
+            </button>
+          )}
+          <div className="sidebar-bottom">
+            <div className="offline">
+              <span className="local-dot" />
+              <span>本地存储 · 离线可用</span>
+              <CloudOff size={14} />
+            </div>
+            <button className="profile" onClick={() => openSettings()}>
+              <span className="avatar">我</span>
+              <span>
+                <strong>个人知识库</strong>
+                <small>只属于你的思考空间</small>
+              </span>
+              <Settings size={17} />
+            </button>
+          </div>
+        </aside>
+      )}
+      {!layout.hidden.sidebar && <PaneDivider {...layout.divider('sidebar')} />}
       <main className="main">
         {status?.fault ? (
           <div className="fault-screen">
@@ -768,124 +809,131 @@ function App() {
           </div>
         ) : (
           <div className="workspace">
-            <section className="note-list">
-              <div className="list-heading">
-                <div>
-                  <h1>
-                    {query
-                      ? '搜索结果'
-                      : view === 'trash'
-                        ? '回收站'
-                        : filters.length
-                          ? '标签筛选'
-                          : '全部笔记'}
-                  </h1>
-                  <p>{total} 篇笔记</p>
-                </div>
-                <button className="icon" title="刷新列表" onClick={() => setRefresh((n) => n + 1)}>
-                  <RefreshCw size={15} />
-                </button>
-              </div>
-              {query && (
-                <div className="scope-tabs">
-                  {[
-                    ['all', '全部'],
-                    ['title', '标题'],
-                    ['content', '正文'],
-                    ['tag', '标签'],
-                  ].map(([value, label]) => (
-                    <button
-                      key={value}
-                      className={scope === value ? 'selected' : ''}
-                      onClick={() => setScope(value)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div className="list-sort">
-                <span>{query ? '按匹配字段与更新时间' : '最近更新'}</span>
-                <ChevronDown size={13} />
-              </div>
-              <div className="notes-scroll">
-                {listState === 'index' ? (
-                  <div className="list-message">
-                    <RefreshCw size={22} />
-                    <strong>索引正在更新</strong>
-                    <p>正文已保存，搜索就绪后将刷新。</p>
-                  </div>
-                ) : items.length ? (
-                  items.map((n) => (
-                    <button
-                      className={'note-card ' + (note?.note_id === n.note_id ? 'selected' : '')}
-                      key={n.note_id}
-                      onClick={() => void select(n.note_id)}
-                    >
-                      <div className="note-card-title">
-                        <FileText size={15} />
-                        <strong>
-                          <Highlight text={n.title} query={query} />
-                        </strong>
-                      </div>
-                      <p>
-                        <Highlight
-                          text={n.snippet?.trim() || '这篇笔记等待你的第一个想法…'}
-                          query={query}
-                        />
-                      </p>
-                      <div className="note-card-foot">
-                        <time>{date(n.updated_at)}</time>
-                        {n.tags?.slice(0, 2).map((t: any) => (
-                          <span key={t.tag_id} className="chip small">
-                            {t.name}
-                          </span>
-                        ))}
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="list-message">
-                    <FileText size={25} />
-                    <strong>
-                      {listState === 'loading'
-                        ? '正在读取…'
-                        : query
-                          ? '还没有找到匹配内容'
-                          : view === 'trash'
-                            ? '回收站是空的'
-                            : '留一点空间给新想法'}
-                    </strong>
-                    <p>
+            {!layout.hidden.list && (
+              <section id="note-list-pane" className="note-list">
+                <div className="list-heading">
+                  <div>
+                    <h1>
                       {query
-                        ? '试试更简短的关键词，或调整筛选。'
+                        ? '搜索结果'
                         : view === 'trash'
-                          ? '删除的笔记会保留在这里。'
-                          : '点击新建，写下第一篇笔记。'}
-                    </p>
+                          ? '回收站'
+                          : filters.length
+                            ? '标签筛选'
+                            : '全部笔记'}
+                    </h1>
+                    <p>{total} 篇笔记</p>
+                  </div>
+                  <button
+                    className="icon"
+                    title="刷新列表"
+                    onClick={() => setRefresh((n) => n + 1)}
+                  >
+                    <RefreshCw size={15} />
+                  </button>
+                </div>
+                {query && (
+                  <div className="scope-tabs">
+                    {[
+                      ['all', '全部'],
+                      ['title', '标题'],
+                      ['content', '正文'],
+                      ['tag', '标签'],
+                    ].map(([value, label]) => (
+                      <button
+                        key={value}
+                        className={scope === value ? 'selected' : ''}
+                        onClick={() => setScope(value)}
+                      >
+                        {label}
+                      </button>
+                    ))}
                   </div>
                 )}
-              </div>
-              <div className="pagination">
-                <span>{total ? `${page} / ${Math.ceil(total / 50)} 页` : '暂无笔记'}</span>
-                <button
-                  className="icon"
-                  aria-label="上一页"
-                  disabled={page <= 1 || listState === 'index'}
-                  onClick={() => setPage((n) => n - 1)}
-                >
-                  <ChevronLeft size={15} />
-                </button>
-                <button
-                  className="icon"
-                  aria-label="下一页"
-                  disabled={page * 50 >= total || listState === 'index'}
-                  onClick={() => setPage((n) => n + 1)}
-                >
-                  <ChevronRight size={15} />
-                </button>
-              </div>
-            </section>
+                <div className="list-sort">
+                  <span>{query ? '按匹配字段与更新时间' : '最近更新'}</span>
+                  <ChevronDown size={13} />
+                </div>
+                <div className="notes-scroll">
+                  {listState === 'index' ? (
+                    <div className="list-message">
+                      <RefreshCw size={22} />
+                      <strong>索引正在更新</strong>
+                      <p>正文已保存，搜索就绪后将刷新。</p>
+                    </div>
+                  ) : items.length ? (
+                    items.map((n) => (
+                      <button
+                        className={'note-card ' + (note?.note_id === n.note_id ? 'selected' : '')}
+                        key={n.note_id}
+                        onClick={() => void select(n.note_id)}
+                      >
+                        <div className="note-card-title">
+                          <FileText size={15} />
+                          <strong>
+                            <Highlight text={n.title} query={query} />
+                          </strong>
+                        </div>
+                        <p>
+                          <Highlight
+                            text={n.snippet?.trim() || '这篇笔记等待你的第一个想法…'}
+                            query={query}
+                          />
+                        </p>
+                        <div className="note-card-foot">
+                          <time>{date(n.updated_at)}</time>
+                          {n.tags?.slice(0, 2).map((t: any) => (
+                            <span key={t.tag_id} className="chip small">
+                              {t.name}
+                            </span>
+                          ))}
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="list-message">
+                      <FileText size={25} />
+                      <strong>
+                        {listState === 'loading'
+                          ? '正在读取…'
+                          : query
+                            ? '还没有找到匹配内容'
+                            : view === 'trash'
+                              ? '回收站是空的'
+                              : '留一点空间给新想法'}
+                      </strong>
+                      <p>
+                        {query
+                          ? '试试更简短的关键词，或调整筛选。'
+                          : view === 'trash'
+                            ? '删除的笔记会保留在这里。'
+                            : '点击新建，写下第一篇笔记。'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="pagination">
+                  <span>{total ? `${page} / ${Math.ceil(total / 50)} 页` : '暂无笔记'}</span>
+                  <button
+                    className="icon"
+                    aria-label="上一页"
+                    disabled={page <= 1 || listState === 'index'}
+                    onClick={() => setPage((n) => n - 1)}
+                  >
+                    <ChevronLeft size={15} />
+                  </button>
+                  <button
+                    className="icon"
+                    aria-label="下一页"
+                    disabled={page * 50 >= total || listState === 'index'}
+                    onClick={() => setPage((n) => n + 1)}
+                  >
+                    <ChevronRight size={15} />
+                  </button>
+                </div>
+              </section>
+            )}
+            {!layout.hidden.list && <PaneDivider {...layout.divider('list')} />}
             {note && draft ? (
               <section className="document">
                 <div className="document-top">
