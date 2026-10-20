@@ -1,6 +1,7 @@
-import { cp, mkdir, writeFile, rename, stat, rm } from 'node:fs/promises';
+import { cp, mkdir, writeFile, rename, stat, rm, readFile } from 'node:fs/promises';
 import { join, resolve, dirname } from 'node:path';
 const directory = 'release/知页-win-x64';
+const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 const output = resolve(directory);
 if (dirname(output) !== resolve('release') || !output.endsWith('知页-win-x64'))
   throw new Error('打包输出目录不安全');
@@ -14,7 +15,7 @@ await writeFile(
   JSON.stringify({
     name: 'zhiye-notes',
     productName: '知页',
-    version: '1.0.0',
+    version,
     main: 'dist/main.cjs',
   }),
 );

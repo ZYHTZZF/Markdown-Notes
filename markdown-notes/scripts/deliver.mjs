@@ -6,6 +6,7 @@ import { pipeline } from 'node:stream/promises';
 import yazl from 'yazl';
 
 const project = process.cwd();
+const { version } = JSON.parse(await readFile('package.json', 'utf8'));
 const workspace = resolve(project, '..');
 const slash = (value) => value.split(sep).join('/');
 async function files(directory) {
@@ -54,7 +55,7 @@ for (const path of baselinePaths)
   baselines.push({ path, sha256: await digest(join(workspace, path)) });
 const manifest = {
   date: new Date().toISOString(),
-  version: '1.0.0',
+  version,
   baseline: baselines,
   compiled_files: integrity,
   packaged: JSON.parse(await readFile('reports/packaged-test.json', 'utf8')),

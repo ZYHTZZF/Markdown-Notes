@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-20T08:57:28.725Z",
+  "observations": [
+    {
+      "mode": "close",
+      "run": 0,
+      "errors": [],
+      "stderr": "Debugger ending on ws://127.0.0.1:10119/9b0a7361-3abd-44f6-82aa-005fc8f2f506\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+    },
+    {
+      "mode": "close",
+      "run": 1,
+      "errors": [],
+      "stderr": "Debugger ending on ws://127.0.0.1:10123/ea2f7c53-6b46-4e97-b445-9d7845bd9fd5\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+    },
+    {
+      "mode": "close",
+      "run": 2,
+      "errors": [],
+      "stderr": "Debugger ending on ws://127.0.0.1:10127/07466363-5e81-490d-879d-a204fcd79fb7\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+    },
+    {
+      "mode": "close",
+      "run": 3,
+      "errors": [],
+      "stderr": "Debugger ending on ws://127.0.0.1:2819/e5b8470f-f61a-461b-bb45-d41f82527589\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+    },
+    {
+      "mode": "close",
+      "run": 4,
+      "errors": [],
+      "stderr": "Debugger ending on ws://127.0.0.1:11943/96a513b0-4add-4b4d-b82f-1552e0fe02f3\r\nFor help, see: https://nodejs.org/learn/getting-started/debugging\r\n"
+    },
+    {
+      "mode": "destroy",
+      "run": 0,
+      "errors": [
+        {
+          "kind": "uncaughtExceptionMonitor",
+          "error": "TypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        },
+        {
+          "kind": "A JavaScript error occurred in the main process",
+          "error": "Uncaught Exception:\nTypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        },
+        {
+          "kind": "uncaughtExceptionMonitor",
+          "error": "TypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        },
+        {
+          "kind": "A JavaScript error occurred in the main process",
+          "error": "Uncaught Exception:\nTypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        }
+      ],
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
+    },
+    {
+      "mode": "destroy",
+      "run": 1,
+      "errors": [],
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
+    },
+    {
+      "mode": "destroy",
+      "run": 2,
+      "errors": [],
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
+    },
+    {
+      "mode": "destroy",
+      "run": 3,
+      "errors": [
+        {
+          "kind": "uncaughtExceptionMonitor",
+          "error": "TypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        },
+        {
+          "kind": "A JavaScript error occurred in the main process",
+          "error": "Uncaught Exception:\nTypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)"
+        },
+        {
+          "kind": "uncaughtExceptionMonitor",
+          "error": "TypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)\n    at [kOnExit] (node:internal/worker:387:5)\n    at Worker.<computed>.onexit (node:internal/worker:295:20)"
+        },
+        {
+          "kind": "A JavaScript error occurred in the main process",
+          "error": "Uncaught Exception:\nTypeError: Object has been destroyed\n    at Worker.<anonymous> (I:\\软件工程\\markdown-notes\\dist\\main.cjs:19787:12)\n    at Worker.emit (node:events:514:28)\n    at MessagePort.<anonymous> (node:internal/worker:350:14)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)\n    at [kOnExit] (node:internal/worker:387:5)\n    at Worker.<computed>.onexit (node:internal/worker:295:20)"
+        }
+      ],
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
+    },
+    {
+      "mode": "destroy",
+      "run": 4,
+      "errors": [],
+      "stderr": "Waiting for the debugger to disconnect...\r\n"
+    }
+  ]
+}

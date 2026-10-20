@@ -1,6 +1,6 @@
 import { _electron } from '@playwright/test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, createReadStream } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, createReadStream, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -26,7 +26,7 @@ try {
     node: process.versions.node,
   }));
   assert(runtime.packaged);
-  assert.equal(runtime.version, '1.0.0');
+  assert.equal(runtime.version, JSON.parse(readFileSync('package.json', 'utf8')).version);
   const hash = createHash('sha256');
   for await (const chunk of createReadStream(exe)) hash.update(chunk);
   const report = {

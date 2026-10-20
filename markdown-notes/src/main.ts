@@ -33,6 +33,15 @@ const envelope = z
     payload: z.record(z.string(), z.unknown()),
   })
   .strict();
+function liveWindow() {
+  return win && !win.isDestroyed() && !win.webContents.isDestroyed() ? win : null;
+}
+function sendToWindow(channel: string, value?: unknown) {
+  const target = liveWindow();
+  if (!target) return false;
+  target.webContents.send(channel, value);
+  return true;
+}
 function call(request: Rpc) {
   return new Promise<any>((resolve, reject) => {
     const id = randomUUID(),
@@ -51,8 +60,19 @@ function call(request: Rpc) {
 function system(method: string, payload: any = {}, epoch: string | null = null) {
   return call({ api_version: 1, request_id: randomUUID(), epoch, method, payload });
 }
-const trusted = (sender: any) =>
-  sender?.url?.startsWith('zhiyenotes://app/') && sender === win?.webContents.mainFrame;
+function trusted(event: Electron.IpcMainEvent | Electron.IpcMainInvokeEvent) {
+  const target = liveWindow();
+  if (!target || event.sender !== target.webContents) return false;
+  // senderFrame can itself throw when its frame was disposed during shutdown.
+  try {
+    const sender = event.senderFrame;
+    return (
+      !!sender?.url?.startsWith('zhiyenotes://app/') && sender === target.webContents.mainFrame
+    );
+  } catch {
+    return false;
+  }
+}
 const safeName = (title: string, id: string) => {
   let s = title
     .replace(/[<>:"/\\|?*\x00-\x1f]/g, '_')
@@ -71,7 +91,7 @@ if (gotLock)
     });
     backend.on('message', (msg) => {
       if (msg.event) {
-        win?.webContents.send('notes:change', msg.event);
+        sendToWindow('notes:change', msg.event);
         return;
       }
       const p = pending.get(msg.id);
@@ -93,7 +113,7 @@ if (gotLock)
         );
       }
       pending.clear();
-      win?.webContents.send('notes:change', {
+      sendToWindow('notes:change', {
         kind: 'fault',
         fault: '本地数据服务已停止，请重新启动',
       });
@@ -130,8 +150,7 @@ if (gotLock)
     });
     ipcMain.handle('notes:call', async (event, input) => {
       try {
-        if (!trusted(event.senderFrame))
-          throw Object.assign(new Error('来源不可用'), { code: 'E_INPUT' });
+        if (!trusted(event)) throw Object.assign(new Error('来源不可用'), { code: 'E_INPUT' });
         const request = envelope.parse(input) as Rpc,
           { method, payload } = request;
         if (method === 'system.openLink') {
@@ -237,7 +256,9 @@ if (gotLock)
       height: 940,
       minWidth: 1080,
       minHeight: 700,
-      backgroundColor: '#f6f5f1',
+      backgroundColor: '#F5F5F7',
+      titleBarStyle: 'hidden',
+      titleBarOverlay: { color: '#F5F5F7', symbolColor: '#1D1D1F', height: 56 },
       title: '知页 · 个人知识库',
       show: false,
       autoHideMenuBar: true,
@@ -264,11 +285,15 @@ if (gotLock)
       event.preventDefault();
       if (!closing) {
         closing = true;
-        win?.webContents.send('notes:closing');
+        sendToWindow('notes:closing');
       }
     });
+    win.once('closed', () => {
+      // Worker messages can already be queued when window-all-closed terminates it.
+      win = null;
+    });
     ipcMain.on('notes:close-result', async (event, ok) => {
-      if (!trusted(event.senderFrame)) return;
+      if (!trusted(event)) return;
       if (!ok) {
         const result = await dialog.showMessageBox(win!, {
           type: 'warning',
@@ -283,15 +308,16 @@ if (gotLock)
         }
       }
       allowClose = true;
-      win?.close();
+      liveWindow()?.close();
     });
-    win.once('ready-to-show', () => win?.show());
+    win.once('ready-to-show', () => liveWindow()?.show());
     await win.loadURL('zhiyenotes://app/index.html');
   });
 app.on('second-instance', () => {
-  win?.restore();
-  win?.show();
-  win?.focus();
+  const target = liveWindow();
+  target?.restore();
+  target?.show();
+  target?.focus();
 });
 app.on('window-all-closed', () => {
   backend?.terminate();

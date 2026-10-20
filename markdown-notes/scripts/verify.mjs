@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, copyFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, copyFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 mkdirSync('reports', { recursive: true });
 function run(name, args) {
@@ -23,4 +23,10 @@ run('unit-tests', [
 ]);
 run('desktop-tests', ['node_modules/@playwright/test/cli.js', 'test']);
 copyFileSync('test-results/e2e-results.json', 'reports/desktop-tests.json');
+mkdirSync('reports/screenshots', { recursive: true });
+for (const name of readdirSync('test-results')) {
+  if (name.endsWith('.png')) copyFileSync(`test-results/${name}`, `reports/screenshots/${name}`);
+  else if (/^visual-\d+\.json$/.test(name)) copyFileSync(`test-results/${name}`, `reports/${name}`);
+}
+run('lifecycle-tests', ['scripts/diagnose-lifecycle.mjs']);
 console.log('验证记录已保存至 reports/');

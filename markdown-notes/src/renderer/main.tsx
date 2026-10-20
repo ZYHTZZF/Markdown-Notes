@@ -46,6 +46,7 @@ import {
 import { markdown, codepoints, key, matchRange, trim } from '../shared/rules';
 import type { NoteView, Tag } from '../shared/types';
 import './style.css';
+import { version as APP_VERSION } from '../../package.json';
 
 const api = window.notesApi;
 const date = (s: string) =>
@@ -57,9 +58,6 @@ const size = (n: number) =>
     : n >= 1024
       ? (n / 1024).toFixed(1) + ' KiB'
       : n + ' B';
-const colors = ['orange', 'sage', 'blue', 'purple', 'rose'];
-const color = (text: string) =>
-  colors[[...text].reduce((n, c) => n + c.codePointAt(0)!, 0) % colors.length];
 type Draft = {
   note_id: string;
   revision: number;
@@ -175,6 +173,7 @@ function App() {
     [toast, setToast] = useState<{ text: string; error: boolean } | null>(null),
     [links, setLinks] = useState<any>({ outgoing: [], incoming: [] }),
     [linkTab, setLinkTab] = useState('outgoing'),
+    [referencesOpen, setReferencesOpen] = useState(false),
     [settingsTab, setSettingsTab] = useState('library'),
     [backups, setBackups] = useState<any[]>([]);
   const draftRef = useRef<Draft | null>(null),
@@ -186,6 +185,26 @@ function App() {
     statusRef = useRef<any>(null),
     firstEdit = useRef(0),
     toastTimer = useRef<any>(null);
+  const referencesButton = useRef<HTMLButtonElement>(null),
+    referencesCloseButton = useRef<HTMLButtonElement>(null);
+  const closeReferences = useCallback(() => {
+    setReferencesOpen(false);
+    referencesButton.current?.focus();
+  }, []);
+  useEffect(() => {
+    if (referencesOpen) referencesCloseButton.current?.focus();
+  }, [referencesOpen]);
+  useEffect(() => {
+    if (!referencesOpen || modal) return;
+    const escape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        e.preventDefault();
+        closeReferences();
+      }
+    };
+    window.addEventListener('keydown', escape);
+    return () => window.removeEventListener('keydown', escape);
+  }, [referencesOpen, modal, closeReferences]);
   const setDraft = (value: Draft | null) => {
     draftRef.current = value;
     setDraftState(value);
@@ -211,7 +230,10 @@ function App() {
         sequence: 0,
         dirty: false,
       });
-    else setDraft(null);
+    else {
+      setDraft(null);
+      setReferencesOpen(false);
+    }
     setSaveState('saved');
   }, []);
   const flush = useCallback(async () => {
@@ -600,18 +622,49 @@ function App() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <header className="topbar" aria-label="窗口工具栏">
         <div className="brand">
           <div className="brand-mark">
-            <BookOpen size={23} strokeWidth={1.6} />
+            <BookOpen size={21} strokeWidth={1.7} />
           </div>
-          <div>
-            <strong>知页</strong>
-            <span>让知识，慢慢生长</span>
-          </div>
+          <strong>知页</strong>
+          <span>个人知识库</span>
         </div>
+        <div className="global-search">
+          <Search size={17} />
+          <input
+            ref={searchRef}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (view === 'trash') setView('all');
+            }}
+            placeholder="搜索你的知识库…"
+            aria-label="搜索笔记"
+          />
+          <kbd>Ctrl K</kbd>
+          {query && (
+            <button className="icon" aria-label="清空搜索" onClick={() => setQuery('')}>
+              <X size={14} />
+            </button>
+          )}
+        </div>
+        <button className="button subtle" onClick={() => openSettings('backup')}>
+          <Archive size={16} />
+          <span>备份与恢复</span>
+        </button>
+        <button
+          className="new-button"
+          onClick={() => void create()}
+          disabled={!status || !!busy || !!status?.fault}
+        >
+          <Plus size={17} />
+          新建笔记
+        </button>
+      </header>
+      <aside className="sidebar">
         <div className="workspace-label">
-          我的工作空间 <span>LOCAL</span>
+          知识空间 <span>本地</span>
         </div>
         <button
           className={'nav ' + (view === 'all' && !filters.length ? 'active' : '')}
@@ -652,7 +705,7 @@ function App() {
                 );
               }}
             >
-              <span className={'tag-dot ' + color(t.name)} />
+              <span className="tag-dot" />
               <span>{t.name}</span>
               {filters.includes(t.tag_id) && <Check size={13} />}
             </button>
@@ -679,7 +732,7 @@ function App() {
         )}
         <div className="sidebar-bottom">
           <div className="offline">
-            <span className="green-dot" />
+            <span className="local-dot" />
             <span>本地存储 · 离线可用</span>
             <CloudOff size={14} />
           </div>
@@ -694,43 +747,6 @@ function App() {
         </div>
       </aside>
       <main className="main">
-        <header className="topbar">
-          <div className="breadcrumb">
-            工作空间 <ChevronRight size={13} />
-            <strong>{view === 'trash' ? '回收站' : '全部笔记'}</strong>
-          </div>
-          <div className="global-search">
-            <Search size={17} />
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                if (view === 'trash') setView('all');
-              }}
-              placeholder="搜索你的知识库…"
-              aria-label="搜索笔记"
-            />
-            <kbd>Ctrl K</kbd>
-            {query && (
-              <button className="icon" aria-label="清空搜索" onClick={() => setQuery('')}>
-                <X size={14} />
-              </button>
-            )}
-          </div>
-          <button className="button subtle" onClick={() => openSettings('backup')}>
-            <Archive size={16} />
-            备份与恢复
-          </button>
-          <button
-            className="new-button"
-            onClick={() => void create()}
-            disabled={!status || !!busy || !!status?.fault}
-          >
-            <Plus size={17} />
-            新建笔记
-          </button>
-        </header>
         {status?.fault ? (
           <div className="fault-screen">
             <div className="fault-icon">
@@ -764,9 +780,7 @@ function App() {
                           ? '标签筛选'
                           : '全部笔记'}
                   </h1>
-                  <p>
-                    {total} 篇笔记{view === 'all' && !query && ' · 记录每一个值得留下的想法'}
-                  </p>
+                  <p>{total} 篇笔记</p>
                 </div>
                 <button className="icon" title="刷新列表" onClick={() => setRefresh((n) => n + 1)}>
                   <RefreshCw size={15} />
@@ -823,7 +837,7 @@ function App() {
                       <div className="note-card-foot">
                         <time>{date(n.updated_at)}</time>
                         {n.tags?.slice(0, 2).map((t: any) => (
-                          <span key={t.tag_id} className={'chip small ' + color(t.name)}>
+                          <span key={t.tag_id} className="chip small">
                             {t.name}
                           </span>
                         ))}
@@ -877,7 +891,7 @@ function App() {
                 <div className="document-top">
                   <div className="document-label">
                     <FileText size={14} />
-                    {note.deleted_at ? '回收站 / 只读' : 'MARKDOWN NOTE'}
+                    {note.deleted_at ? '回收站 / 只读' : 'Markdown 笔记'}
                   </div>
                   <div className="document-actions">
                     {!note.deleted_at ? (
@@ -944,7 +958,9 @@ function App() {
                   </div>
                 </div>
                 <div className="document-heading">
-                  <h1 onDoubleClick={() => !note.deleted_at && rename()}>{note.title}</h1>
+                  <h1 title={note.title} onDoubleClick={() => !note.deleted_at && rename()}>
+                    {note.title}
+                  </h1>
                   <div className="document-meta">
                     <span>更新于 {fullDate(note.updated_at)}</span>
                     <span>·</span>
@@ -957,7 +973,7 @@ function App() {
                       .map((id) => allTags.find((t) => t.tag_id === id))
                       .filter(Boolean)
                       .map((t) => (
-                        <span key={t!.tag_id} className={'chip ' + color(t!.name)}>
+                        <span key={t!.tag_id} className="chip">
                           <Hash size={11} />
                           {t!.name}
                         </span>
@@ -1007,6 +1023,7 @@ function App() {
                       <button
                         key={m}
                         className={mode === m ? 'selected' : ''}
+                        aria-pressed={mode === m}
                         onClick={() => changeMode(m)}
                       >
                         <Icon size={13} />
@@ -1014,6 +1031,20 @@ function App() {
                       </button>
                     ))}
                   </div>
+                  <button
+                    ref={referencesButton}
+                    className={'references-toggle ' + (referencesOpen ? 'selected' : '')}
+                    aria-label="查看引用关系"
+                    aria-expanded={referencesOpen}
+                    aria-controls="reference-drawer"
+                    onClick={() => (referencesOpen ? closeReferences() : setReferencesOpen(true))}
+                  >
+                    <Link2 size={15} />
+                    <span>引用</span>
+                    <small>
+                      {links.outgoing.length} / {links.incoming.length}
+                    </small>
+                  </button>
                 </div>
                 <div
                   className={'editor-area ' + mode}
@@ -1021,7 +1052,7 @@ function App() {
                 >
                   {mode !== 'read' && (
                     <div className="source-pane">
-                      <div className="pane-label">MARKDOWN</div>
+                      <div className="pane-label">Markdown 源文</div>
                       <textarea
                         ref={editor}
                         value={content}
@@ -1042,7 +1073,7 @@ function App() {
                   {mode !== 'edit' && (
                     <div className="preview-pane">
                       <div className="pane-label">
-                        预览 <span>跟随你的思考</span>
+                        预览 <span>实时呈现</span>
                       </div>
                       <article
                         className="markdown"
@@ -1056,57 +1087,85 @@ function App() {
                     </div>
                   )}
                 </div>
-                <div className="reference-panel">
-                  <div className="reference-tabs">
-                    <button
-                      className={linkTab === 'outgoing' ? 'active' : ''}
-                      onClick={() => setLinkTab('outgoing')}
-                    >
-                      <Link2 size={14} />
-                      引用目标<span>{links.outgoing.length}</span>
-                    </button>
-                    <button
-                      className={linkTab === 'incoming' ? 'active' : ''}
-                      onClick={() => setLinkTab('incoming')}
-                    >
-                      <ArrowLeft size={14} />
-                      引用来源<span>{links.incoming.length}</span>
-                    </button>
-                    <span className="reference-hint">把零散的想法，连接成知识</span>
-                  </div>
-                  <div className="reference-content">
-                    {status?.index?.state !== 'ready' ? (
-                      <span className="muted">引用索引更新中，已保存正文不受影响。</span>
-                    ) : links[linkTab].length ? (
-                      links[linkTab].map((l: any, i: number) => (
-                        <button
-                          key={i}
-                          className={'reference-link ' + (!l.target_id ? 'broken' : '')}
-                          onClick={() =>
-                            linkTab === 'incoming'
-                              ? void act('打开引用来源', async () =>
-                                  installNote(await api.call('note.get', { note_id: l.source_id })),
-                                )
-                              : jump(l.target_key)
-                          }
-                        >
-                          <FileText size={13} />
-                          {linkTab === 'incoming' ? l.source_title : l.name}
-                          {l.source_id === l.target_id && <small>当前笔记</small>}
-                          {!l.target_id && linkTab === 'outgoing' && <small>目标不存在</small>}
-                          <span>{l.occurrences} 处</span>
-                          <ArrowUpRight size={12} />
-                        </button>
-                      ))
-                    ) : (
-                      <span className="muted">
-                        {linkTab === 'incoming'
-                          ? '还没有其他笔记引用这里。'
-                          : '在正文输入 [[笔记名称]]，建立第一条知识关联。'}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                {referencesOpen && (
+                  <aside
+                    id="reference-drawer"
+                    className="reference-panel"
+                    aria-label="笔记引用关系"
+                  >
+                    <div className="reference-heading">
+                      <div>
+                        <h2>知识关联</h2>
+                        <p title={note.title}>{note.title}</p>
+                      </div>
+                      <button
+                        ref={referencesCloseButton}
+                        className="icon"
+                        aria-label="关闭引用面板"
+                        onClick={closeReferences}
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                    <div className="reference-tabs">
+                      <button
+                        className={linkTab === 'outgoing' ? 'active' : ''}
+                        aria-pressed={linkTab === 'outgoing'}
+                        onClick={() => setLinkTab('outgoing')}
+                      >
+                        <Link2 size={14} />
+                        引用目标<span>{links.outgoing.length}</span>
+                      </button>
+                      <button
+                        className={linkTab === 'incoming' ? 'active' : ''}
+                        aria-pressed={linkTab === 'incoming'}
+                        onClick={() => setLinkTab('incoming')}
+                      >
+                        <ArrowLeft size={14} />
+                        引用来源<span>{links.incoming.length}</span>
+                      </button>
+                    </div>
+                    <div className="reference-content">
+                      {note.deleted_at ? (
+                        <span className="muted">
+                          回收站笔记不参与引用。恢复后将按当前标题重新解析。
+                        </span>
+                      ) : status?.index?.state !== 'ready' ? (
+                        <span className="muted">引用索引更新中，已保存正文不受影响。</span>
+                      ) : links[linkTab].length ? (
+                        links[linkTab].map((l: any, i: number) => (
+                          <button
+                            key={i}
+                            className={'reference-link ' + (!l.target_id ? 'broken' : '')}
+                            onClick={() =>
+                              linkTab === 'incoming'
+                                ? void act('打开引用来源', async () =>
+                                    installNote(
+                                      await api.call('note.get', { note_id: l.source_id }),
+                                    ),
+                                  )
+                                : jump(l.target_key)
+                            }
+                          >
+                            <FileText size={13} />
+                            <strong>{linkTab === 'incoming' ? l.source_title : l.name}</strong>
+                            {l.source_id === l.target_id && <small>当前笔记</small>}
+                            {!l.target_id && linkTab === 'outgoing' && <small>目标不存在</small>}
+                            <span>{l.occurrences} 处</span>
+                            <ArrowUpRight size={12} />
+                          </button>
+                        ))
+                      ) : (
+                        <span className="muted">
+                          {linkTab === 'incoming'
+                            ? '还没有其他笔记引用这里。'
+                            : '在正文输入 [[笔记名称]]，建立第一条知识关联。'}
+                        </span>
+                      )}
+                    </div>
+                    <p className="reference-footer">目标 / 来源 · 仅统计已保存的内容</p>
+                  </aside>
+                )}
               </section>
             ) : (
               <section className="empty-document">
@@ -1366,12 +1425,12 @@ function App() {
                           checked={draft?.tag_ids.includes(t.tag_id) ?? false}
                           onChange={() => toggleTag(t.tag_id)}
                         />
-                        <span className={'tag-dot ' + color(t.name)} />
+                        <span className="tag-dot" />
                         {t.name}
                       </label>
                     ) : (
                       <>
-                        <span className={'tag-dot ' + color(t.name)} />
+                        <span className="tag-dot" />
                         <span>{t.name}</span>
                         <button
                           className="icon"
@@ -1631,7 +1690,7 @@ function App() {
                   <p>
                     “正文已保存”与“索引可用”分别显示。磁盘写入失败时请保留编辑窗口并重试；不要直接修改内部数据库文件。
                   </p>
-                  <p className="muted">知页 1.0.0 · 本地优先 · 首发备份格式1</p>
+                  <p className="muted">知页 {APP_VERSION} · 本地优先 · 首发备份格式1</p>
                 </div>
               )}
             </>

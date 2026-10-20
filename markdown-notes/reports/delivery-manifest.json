@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-20T08:34:20.597Z",
-  "version": "1.0.0",
+  "date": "2026-10-20T09:01:48.803Z",
+  "version": "1.1.0",
   "baseline": [
     {
       "path": "需求分析文档/01-需求分析文档.md",
@@ -30,41 +30,41 @@
     },
     {
       "path": "dist/main.cjs",
-      "sha256": "0171c137bf00619ca0a5cb1bc6679dc98d311f3afe04055ef4c5e6a581879451"
+      "sha256": "c14043755eba98016d7dcc90c78e09ce22f9d7a47868abeabe284f340bace5f2"
     },
     {
       "path": "dist/main.cjs.map",
-      "sha256": "636857cd5c3bf34a4f32c211d1211ff336eed9b7df61e5b2bb29fcf6046955b3"
+      "sha256": "9dad762bba4f5acfa5c7dfd8a7812ecb1c9cf30cbdb89e6deb1ffd477e180a11"
     },
     {
       "path": "dist/preload.cjs",
-      "sha256": "4883c069bf4c90a3a02614399add398d6de0f772f7bb1fb9263afaf60d8398c2"
+      "sha256": "0ab138d4670c1ec937b54ca46bc58499fa2a1151e3c0891463af535eb72c81e6"
     },
     {
       "path": "dist/preload.cjs.map",
-      "sha256": "8411f97cbe4811b77e2c0b6268b88d374f5bb7da7df264001157d4a2488805f4"
+      "sha256": "45bd9b45015fc637b2f243dd3d5d47228d248910e8c38809b8b669766022cd01"
     },
     {
-      "path": "dist/renderer/assets/index-BXIXxpIK.css",
-      "sha256": "27d411ea61961848c6e273a55ea6ed3eb5be247f48f93433a30e8e76b1ee6de6"
+      "path": "dist/renderer/assets/index-Bq9aO4-u.css",
+      "sha256": "c0771d3c19278e28e2bf8e7cf5066ae9420a59f091752a5f41f56b1ecb0c6a59"
     },
     {
-      "path": "dist/renderer/assets/index-C5VBg5q7.js",
-      "sha256": "ee4514a94150018f9231aaead761f5c5210c6b256391014c9aaca882aca43e63"
+      "path": "dist/renderer/assets/index-C4xeN19p.js",
+      "sha256": "0cb625da1482c96280a7daa5e24e760f03cc57d58379e9e98dc104fd87c24170"
     },
     {
       "path": "dist/renderer/index.html",
-      "sha256": "4d9479037184bcff2242249f082a226a3bef03ac9eb9f3fa96fd7d9c076ce6cf"
+      "sha256": "f4c3522d12cc18f433900be8ff66e74787f0a1b8a8f388136c7bc5e795d7078a"
     }
   ],
   "packaged": {
-    "date": "2026-10-20T08:33:31.185Z",
+    "date": "2026-10-20T09:01:21.678Z",
     "pass": true,
     "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
     "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
     "runtime": {
       "packaged": true,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "electron": "44.9.1",
       "node": "24.22.0"
     },

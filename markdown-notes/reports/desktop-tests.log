@@ -1,11 +1,14 @@
 
-Running 3 tests using 1 worker
+Running 6 tests using 1 worker
 
-  ok 1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (6.2s)
-  ok 2 tests\e2e\app.spec.ts:99:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.2s)
-  ok 3 tests\e2e\app.spec.ts:128:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.4s)
+  ok 1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (7.5s)
+  ok 2 tests\e2e\app.spec.ts:105:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.6s)
+  ok 3 tests\e2e\app.spec.ts:134:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.3s)
+  ok 4 tests\e2e\visual.spec.ts:101:7 › 清透界面1480×940：长内容、引用抽屉、搜索、设置与恢复布局 (6.8s)
+  ok 5 tests\e2e\visual.spec.ts:101:7 › 清透界面1080×700：长内容、引用抽屉、搜索、设置与恢复布局 (6.2s)
+  ok 6 tests\e2e\visual.spec.ts:247:5 › 窗口控制、减少动态效果、模式偏好及关闭前保存兼容 (2.4s)
 
-  3 passed (25.2s)
+  6 passed (42.4s)
 
-(node:50812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:40336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)

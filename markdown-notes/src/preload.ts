@@ -29,13 +29,18 @@ contextBridge.exposeInMainWorld('notesApi', {
         'preferences',
       ].includes(method)
     )
-      void ipcRenderer.invoke('notes:call', {
-        api_version: 1,
-        request_id: crypto.randomUUID(),
-        epoch,
-        method: 'request.ack',
-        payload: { request_id },
-      });
+      void ipcRenderer
+        .invoke('notes:call', {
+          api_version: 1,
+          request_id: crypto.randomUUID(),
+          epoch,
+          method: 'request.ack',
+          payload: { request_id },
+        })
+        .catch(() => {
+          // Shutdown can dispose the bridge before this optional receipt acknowledgement.
+          // The unacknowledged business receipt remains available in the data service.
+        });
     return result.data;
   },
   onChange(fn: (value: any) => void) {

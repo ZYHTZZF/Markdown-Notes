@@ -45,7 +45,9 @@ test('桌面端：离线编辑、自动保存、标签、引用、导出与完�
         page.evaluate(async () => (await window.notesApi.call('system.status')).index.state),
       )
       .toBe('ready');
+    await page.getByRole('button', { name: '查看引用关系', exact: true }).click();
     await expect(page.locator('.reference-content')).toContainText('知识管理');
+    await page.getByRole('button', { name: '关闭引用面板', exact: true }).click();
     await page.getByRole('textbox', { name: '搜索笔记' }).fill('需求与设计');
     await expect(page.locator('.notes-scroll .note-card')).toHaveCount(1);
     await page.getByRole('textbox', { name: '搜索笔记' }).fill('');
@@ -83,7 +85,11 @@ test('桌面端：离线编辑、自动保存、标签、引用、导出与完�
     await expect(page.getByRole('status')).toContainText('已恢复', { timeout: 20000 });
     await page.locator('.note-card').filter({ hasText: '软件工程 · 需求与设计' }).click();
     await expect(editor).toHaveValue(/软件工程学习笔记/);
-    await page.screenshot({ path: 'test-results/知页-编辑与预览.png', fullPage: true });
+    await page.screenshot({
+      animations: 'disabled',
+      path: 'test-results/知页-编辑与预览.png',
+      fullPage: true,
+    });
     expect(errors).toEqual([]);
     await expect(
       page.evaluate(() => ({

@@ -1,0 +1,53 @@
+[
+  {
+    "mode": "close",
+    "run": 0,
+    "errors": []
+  },
+  {
+    "mode": "close",
+    "run": 1,
+    "errors": []
+  },
+  {
+    "mode": "close",
+    "run": 2,
+    "errors": []
+  },
+  {
+    "mode": "close",
+    "run": 3,
+    "errors": []
+  },
+  {
+    "mode": "close",
+    "run": 4,
+    "errors": []
+  },
+  {
+    "mode": "destroy",
+    "run": 0,
+    "errors": []
+  },
+  {
+    "mode": "destroy",
+    "run": 1,
+    "errors": []
+  },
+  {
+    "mode": "destroy",
+    "run": 2,
+    "errors": []
+  },
+  {
+    "mode": "destroy",
+    "run": 3,
+    "errors": []
+  },
+  {
+    "mode": "destroy",
+    "run": 4,
+    "errors": []
+  }
+]
+

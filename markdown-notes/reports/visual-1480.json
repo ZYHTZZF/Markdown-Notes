@@ -1,0 +1,33 @@
+{
+  "width": 1480,
+  "height": 940,
+  "contrast": {
+    "checked": 93,
+    "minimum": 4.9735839517094105,
+    "failures": []
+  },
+  "drawerContrast": {
+    "checked": 101,
+    "minimum": 4.9735839517094105,
+    "failures": []
+  },
+  "modalContrast": {
+    "checked": 13,
+    "minimum": 5.21763328421225,
+    "failures": []
+  },
+  "restoreContrast": {
+    "checked": 11,
+    "minimum": 5.499240488380038,
+    "failures": []
+  },
+  "checks": [
+    "布局",
+    "抽屉不挤压正文",
+    "Escape与焦点返回",
+    "双向跳转",
+    "搜索输入",
+    "长标题与12标签",
+    "备份恢复预检"
+  ]
+}
