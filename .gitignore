@@ -1,0 +1,24 @@
+# Generated archives and dependency/build output
+*.zip
+markdown-notes/node_modules/
+markdown-notes/dist/
+markdown-notes/release/
+markdown-notes/test-results/
+markdown-notes/playwright-report/
+
+# Local databases, profiles and editor state
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local delivery checksums and superseded draft (the versioned baseline is in 需求分析文档/)
+/交付校验SHA256.txt
+/个人 Markdown 笔记与知识管理工具需求分析文档.md

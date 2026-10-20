@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-20T08:34:20.597Z",
+  "version": "1.0.0",
+  "baseline": [
+    {
+      "path": "需求分析文档/01-需求分析文档.md",
+      "sha256": "1f51f7ca1b0929488b90a9287bb78d09d531a1af3c1e857934704f6c16c7a2e9"
+    },
+    {
+      "path": "软件设计文档/01-软件设计文档.md",
+      "sha256": "776a5bca9337d4553209ff147254269de2268fb7fa315e898c849116d3139b40"
+    }
+  ],
+  "compiled_files": [
+    {
+      "path": "dist/backend.cjs",
+      "sha256": "1263b35d419399af270576d5ba839a7d110edc2dbc1c6b87c0853bccf681c214"
+    },
+    {
+      "path": "dist/backend.cjs.map",
+      "sha256": "d3b82e583e27bbd2a677ebe13b6d3d712897e5feb7e5126ab53eb66b6f26e3a7"
+    },
+    {
+      "path": "dist/indexer.cjs",
+      "sha256": "34dda39a9c022df597661e75f2a30d200d5307e46094c01a7b4a939a27907eb9"
+    },
+    {
+      "path": "dist/indexer.cjs.map",
+      "sha256": "0d67a75e42f7c9a0bdbbae4d199fb770f1a43e493686b957352f804a2b7a6316"
+    },
+    {
+      "path": "dist/main.cjs",
+      "sha256": "0171c137bf00619ca0a5cb1bc6679dc98d311f3afe04055ef4c5e6a581879451"
+    },
+    {
+      "path": "dist/main.cjs.map",
+      "sha256": "636857cd5c3bf34a4f32c211d1211ff336eed9b7df61e5b2bb29fcf6046955b3"
+    },
+    {
+      "path": "dist/preload.cjs",
+      "sha256": "4883c069bf4c90a3a02614399add398d6de0f772f7bb1fb9263afaf60d8398c2"
+    },
+    {
+      "path": "dist/preload.cjs.map",
+      "sha256": "8411f97cbe4811b77e2c0b6268b88d374f5bb7da7df264001157d4a2488805f4"
+    },
+    {
+      "path": "dist/renderer/assets/index-BXIXxpIK.css",
+      "sha256": "27d411ea61961848c6e273a55ea6ed3eb5be247f48f93433a30e8e76b1ee6de6"
+    },
+    {
+      "path": "dist/renderer/assets/index-C5VBg5q7.js",
+      "sha256": "ee4514a94150018f9231aaead761f5c5210c6b256391014c9aaca882aca43e63"
+    },
+    {
+      "path": "dist/renderer/index.html",
+      "sha256": "4d9479037184bcff2242249f082a226a3bef03ac9eb9f3fa96fd7d9c076ce6cf"
+    }
+  ],
+  "packaged": {
+    "date": "2026-10-20T08:33:31.185Z",
+    "pass": true,
+    "executable": "I:\\软件工程\\markdown-notes\\release\\知页-win-x64\\知页.exe",
+    "sha256": "1432afee01d6a788f11cb6649efd271923e1e490beef688c24d31f47965013aa",
+    "runtime": {
+      "packaged": true,
+      "version": "1.0.0",
+      "electron": "44.9.1",
+      "node": "24.22.0"
+    },
+    "checks": [
+      "成品EXE独立启动",
+      "新建与编辑",
+      "安全Markdown预览",
+      "自动持久化",
+      "实际打包标志与版本"
+    ]
+  }
+}

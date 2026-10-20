@@ -1,0 +1,11 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 tests\e2e\app.spec.ts:6:5 › 桌面端：离线编辑、自动保存、标签、引用、导出与完整恢复 (6.2s)
+  ok 2 tests\e2e\app.spec.ts:99:5 › 关闭重启后正文保留，恶意HTML和远程图片不执行 (3.2s)
+  ok 3 tests\e2e\app.spec.ts:128:5 › 持续输入定期持久化，并对规范等价的原文高亮 (15.4s)
+
+  3 passed (25.2s)
+
+(node:50812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
