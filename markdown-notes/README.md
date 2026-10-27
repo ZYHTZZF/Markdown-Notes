@@ -79,6 +79,14 @@ $$
 
 开发环境：Node.js 24及npm。依赖版本固定在package-lock.json；首次安装需要网络，安装后的成品运行无需网络。
 
+开发环境安装可以打开powershell，输入下行指令，根据后续操作安装。
+
+```text
+winget install OpenJS.NodeJS.LTS
+```
+
+安装时，依次执行如下指令
+
 ```text
 npm ci
 node node_modules/electron/install.js
@@ -96,6 +104,8 @@ npm run verify        检查并将验证记录保存至reports
 npm run bench         满容量合成资料库性能测试（耗时较长）
 npm run package       构建Windows可运行目录
 ```
+
+若环境不允许npm执行Electron安装脚本，请将"npm"修改为"npm.cmd"即可。
 
 测试使用临时合成资料库，不读写日常资料。`ZHIYE_DATA_DIR`可指定独立测试资料目录；未设置时使用正常用户数据目录。测试结束后再清理相应临时目录，运行中的资料库不能手动删除WAL或数据库文件。
 
